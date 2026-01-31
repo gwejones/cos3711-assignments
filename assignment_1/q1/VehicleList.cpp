@@ -16,16 +16,17 @@ void VehicleList::addVehicle(Vehicle *vehicle)
     vehicle->setParent(this);
 }
 
-QVector<Vehicle *> VehicleList::getVehicles() const
+QObjectList VehicleList::getVehicles() const
 {
-    QVector<Vehicle *> list;
+    QObjectList list;
     const auto childObjects = children();
     list.reserve(childObjects.size());
     for (QObject *child : childObjects)
     {
-        if (auto *vehicle = dynamic_cast<Vehicle *>(child))
+        // Filter to only include Vehicle-derived children in the returned list.
+        if (dynamic_cast<Vehicle *>(child))
         {
-            list.push_back(vehicle);
+            list.push_back(child);
         }
     }
     return list;
@@ -34,8 +35,11 @@ QVector<Vehicle *> VehicleList::getVehicles() const
 void VehicleList::printAll(QTextStream &out) const
 {
     const auto list = getVehicles();
-    for (Vehicle *vehicle : list)
+    for (QObject *object : list)
     {
-        out << *vehicle;
+        if (auto *vehicle = dynamic_cast<Vehicle *>(object))
+        {
+            out << *vehicle;
+        }
     }
 }
