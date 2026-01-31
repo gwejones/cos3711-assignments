@@ -36,6 +36,6 @@ void VehicleList::printAll(QTextStream &out) const
     const auto list = getVehicles();
     for (Vehicle *vehicle : list)
     {
-        vehicle->print(out);
+        out << *vehicle;
     }
 }

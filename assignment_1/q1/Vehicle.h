@@ -20,7 +20,9 @@ public:
     void setModel(const QString &model);
     void setYear(int year);
 
-    virtual void print(QTextStream &out) const = 0;
+    virtual void print(QTextStream &out) const;
+
+    friend QTextStream &operator<<(QTextStream &out, const Vehicle &vehicle);
 
 protected:
     static int defaultYear();

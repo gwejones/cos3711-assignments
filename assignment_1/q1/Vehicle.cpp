@@ -45,3 +45,15 @@ bool Vehicle::isYearReasonable(int year)
     const int currentYear = QDate::currentDate().year();
     return year >= kMinYear && year <= currentYear + 1;
 }
+
+void Vehicle::print(QTextStream &out) const
+{
+    out << "Vehicle | Model: " << getModel()
+        << " | Year: " << getYear() << Qt::endl;
+}
+
+QTextStream &operator<<(QTextStream &out, const Vehicle &vehicle)
+{
+    vehicle.print(out);
+    return out;
+}

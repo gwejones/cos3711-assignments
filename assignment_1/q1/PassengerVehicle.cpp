@@ -1,5 +1,4 @@
 #include "PassengerVehicle.h"
-
 #include <QTextStream>
 
 PassengerVehicle::PassengerVehicle(QString model, int year, int passengers, QObject *parent)
@@ -22,7 +21,7 @@ void PassengerVehicle::print(QTextStream &out) const
 {
     out << "Passenger Vehicle | Model: " << getModel()
         << " | Year: " << getYear()
-        << " | Passengers: " << getPassengers() << "\n";
+        << " | Passengers: " << getPassengers() << Qt::endl;
 }
 
 int PassengerVehicle::defaultPassengers()

@@ -21,7 +21,7 @@ void TransportVehicle::print(QTextStream &out) const
 {
     out << "Transport Vehicle | Model: " << getModel()
         << " | Year: " << getYear()
-        << " | Capacity: " << getCapacityKg() << " kg\n";
+        << " | Capacity: " << getCapacityKg() << " kg" << Qt::endl;
 }
 
 int TransportVehicle::defaultCapacityKg()

@@ -1,6 +1,5 @@
 #include <QCoreApplication>
 #include <QTextStream>
-
 #include "PassengerVehicle.h"
 #include "TransportVehicle.h"
 #include "VehicleList.h"
@@ -16,7 +15,7 @@ int main(int argc, char *argv[])
     list->addVehicle(new TransportVehicle("Sprinter", 2020, 2200));
     list->addVehicle(new PassengerVehicle());
 
-    out << "Vehicle list:" << "\n";
+    out << "Vehicle list:" << Qt::endl;
     list->printAll(out);
 
     return 0;
