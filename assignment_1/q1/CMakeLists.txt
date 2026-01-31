@@ -13,6 +13,14 @@ qt_standard_project_setup()
 
 qt_add_executable(q1
     main.cpp
+    Vehicle.cpp
+    Vehicle.h
+    PassengerVehicle.cpp
+    PassengerVehicle.h
+    TransportVehicle.cpp
+    TransportVehicle.h
+    VehicleList.cpp
+    VehicleList.h
 )
 
 target_link_libraries(q1 PRIVATE Qt6::Core)

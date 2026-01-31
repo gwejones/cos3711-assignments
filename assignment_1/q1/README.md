@@ -27,6 +27,8 @@ outputting the values in the list to the console.
 ## Build and Run
 This project uses CMake and Qt6 (Core).
 
+Build:
+
 ```bash
 # From assignment_1/q1
 cmake -S . -B build

@@ -1,11 +1,23 @@
 #include <QCoreApplication>
-#include <QTimer>
+#include <QTextStream>
+
+#include "PassengerVehicle.h"
+#include "TransportVehicle.h"
+#include "VehicleList.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
+    QTextStream out(stdout);
 
-    QTimer::singleShot(5000, &app, &QCoreApplication::quit);
+    // Heap-allocate and parent to app so Qt manages lifetime safely.
+    auto *list = new VehicleList(&app);
+    list->addVehicle(new PassengerVehicle("Corolla", 2018, 5));
+    list->addVehicle(new TransportVehicle("Sprinter", 2020, 2200));
+    list->addVehicle(new PassengerVehicle());
 
-    return app.exec();
+    out << "Vehicle list:" << "\n";
+    list->printAll(out);
+
+    return 0;
 }
