@@ -19,7 +19,7 @@ void VehicleList::addVehicle(Vehicle *vehicle)
 QObjectList VehicleList::getVehicles() const
 {
     QObjectList list;
-    const auto childObjects = children();
+    const QObjectList childObjects = children();
     list.reserve(childObjects.size());
     for (QObject *child : childObjects)
     {
@@ -34,10 +34,10 @@ QObjectList VehicleList::getVehicles() const
 
 void VehicleList::printAll(QTextStream &out) const
 {
-    const auto list = getVehicles();
+    const QObjectList list = getVehicles();
     for (QObject *object : list)
     {
-        if (auto *vehicle = dynamic_cast<Vehicle *>(object))
+        if (Vehicle *vehicle = dynamic_cast<Vehicle *>(object))
         {
             out << *vehicle;
         }

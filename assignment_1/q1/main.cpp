@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     QTextStream out(stdout);
 
     // Heap-allocate and parent to app so Qt manages lifetime safely.
-    auto *list = new VehicleList(&app);
+    VehicleList *list = new VehicleList(&app);
     list->addVehicle(new PassengerVehicle("Corolla", 2018, 5));
     list->addVehicle(new TransportVehicle("Sprinter", 2020, 2200));
     list->addVehicle(new PassengerVehicle());
