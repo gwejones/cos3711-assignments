@@ -7,6 +7,7 @@ class QTextStream;
 class TransportVehicle : public Vehicle
 {
     Q_OBJECT
+    Q_PROPERTY(int capacityKg READ getCapacityKg)
 
 public:
     // Creates a transport vehcile with optional model/year/capacity.

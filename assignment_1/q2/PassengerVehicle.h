@@ -7,6 +7,7 @@ class QTextStream;
 class PassengerVehicle : public Vehicle
 {
     Q_OBJECT
+    Q_PROPERTY(int passengers READ getPassengers)
 
 public:
     // Creates a passenger vehicle with optional model/year/passenger count.
