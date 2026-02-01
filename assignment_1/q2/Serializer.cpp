@@ -31,3 +31,7 @@ QString MetaObjectSerializer::serialize(const QObject *object) const
 
     return parts.join(',');
 }
+
+Serializer::~Serializer()
+{
+}
