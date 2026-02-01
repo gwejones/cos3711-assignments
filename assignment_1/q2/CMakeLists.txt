@@ -12,7 +12,11 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 qt_standard_project_setup()
 
 qt_add_executable(q2
+    FileWriter.cpp
+    FileWriter.h
     main.cpp
+    Serializer.cpp
+    Serializer.h
     Vehicle.cpp
     Vehicle.h
     PassengerVehicle.cpp
