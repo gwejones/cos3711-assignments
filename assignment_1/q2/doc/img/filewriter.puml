@@ -1,0 +1,8 @@
+@startuml
+class FileWriter {
+  - QObjectList* list
+  - QString filename
+  + FileWriter(QObjectList* olist, QString fname)
+  + int write()
+}
+@enduml
