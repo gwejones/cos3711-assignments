@@ -7,6 +7,8 @@ class Vehicle;
 
 class VehicleList : public QObject
 {
+    Q_OBJECT
+
 public:
     // Creates an empty list of vehicles with optional parent ownership.
     explicit VehicleList(QObject *parent = nullptr);

@@ -6,6 +6,8 @@ class QTextStream;
 
 class TransportVehicle : public Vehicle
 {
+    Q_OBJECT
+
 public:
     // Creates a transport vehcile with optional model/year/capacity.
     explicit TransportVehicle(QString model = defaultModel(),

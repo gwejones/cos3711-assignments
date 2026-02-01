@@ -7,6 +7,8 @@ class QTextStream;
 
 class Vehicle : public QObject
 {
+    Q_OBJECT
+
 public:
     static constexpr int kMinYear = 1886; // First car created in this year.
 
