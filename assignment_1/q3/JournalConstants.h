@@ -1,5 +1,6 @@
 #pragma once
 
+/// Column index confguration shared by the model, proxy, and view.
 struct JournalColumns
 {
     static constexpr int Author = 0;

@@ -14,6 +14,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    /// Main application window that owns the widgets and wires UI actions to the model.
     explicit MainWindow(QWidget *parent = nullptr);
 
 private slots:

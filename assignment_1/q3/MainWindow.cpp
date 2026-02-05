@@ -88,6 +88,7 @@ void MainWindow::setupUi()
     issueSpin->setRange(1, 10000);
     issueSpin->setValue(1);
 
+    // Keep widget pointers so slot handlers can access current UI state.
     m_authorEdit = authorEdit;
     m_titleEdit = titleEdit;
     m_journalEdit = journalEdit;
@@ -128,6 +129,7 @@ void MainWindow::setupUi()
     QLineEdit *filterEdit = new QLineEdit(filterGroup);
     filterEdit->setPlaceholderText(QStringLiteral("e.g. *jones*"));
     filterEdit->setClearButtonEnabled(true);
+    // Storedd for filter actions triggered by buttons and combo changes.
     m_filterEdit = filterEdit;
 
     QHBoxLayout *filterButtons = new QHBoxLayout;
@@ -240,6 +242,7 @@ void MainWindow::onApplyFilterClicked()
     if (m_proxy == nullptr || m_filterFieldCombo == nullptr || m_filterEdit == nullptr) {
         return;
     }
+    // Proxy filter uses the selected field and wildcard pattern to filter rows.
     m_proxy->setFilterField(m_filterFieldCombo->currentData().toInt());
     m_proxy->setWildcardFilter(m_filterEdit->text().trimmed());
 }
@@ -262,6 +265,7 @@ void MainWindow::onRemoveClicked()
     if (selection.isEmpty()) {
         return;
     }
+    // Remove in descending order so row indices stay valid as rows are deleted.
     std::vector<int> rows;
     rows.reserve(selection.size());
     for (const QModelIndex &proxyIndex : selection) {

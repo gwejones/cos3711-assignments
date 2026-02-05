@@ -29,6 +29,7 @@ void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                    const QModelIndex &index) const
 {
     QSpinBox *spinBox = qobject_cast<QSpinBox *>(editor);
+    // Commit the editor's value into the model after parsing the user's text.
     spinBox->interpretText();
     model->setData(index, spinBox->value(), Qt::EditRole);
 }

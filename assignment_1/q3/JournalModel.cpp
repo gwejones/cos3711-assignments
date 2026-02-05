@@ -26,6 +26,7 @@ bool JournalModel::setData(const QModelIndex &index, const QVariant &value, int 
         if (item != nullptr) {
             item->setData(year, Qt::EditRole);
             item->setText(QString::number(year));
+            // Force a full-row repain so age-based row coloring updates immediately.
             const int lastColumn = columnCount() > 0 ? columnCount() - 1 : 0;
             emit dataChanged(this->index(index.row(), 0),
                              this->index(index.row(), lastColumn),

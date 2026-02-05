@@ -5,6 +5,7 @@
 class SpinBoxDelegate : public QStyledItemDelegate
 {
 public:
+    /// Delegate that provides QSpinBox editors for numeric table cells.
     SpinBoxDelegate(int minValue, int maxValue, QObject *parent = nullptr);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,

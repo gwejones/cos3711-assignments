@@ -7,6 +7,7 @@
 class JournalFilterProxy : public QSortFilterProxyModel
 {
 public:
+    /// Proxy (OOP Proxy pattern) that filters/sorts a source model and decorates rows based on age.
     explicit JournalFilterProxy(QObject *parent = nullptr);
 
     void setFilterField(int column);

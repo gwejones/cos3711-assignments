@@ -46,6 +46,7 @@ bool JournalFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex &sour
 QVariant JournalFilterProxy::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::BackgroundRole && index.isValid()) {
+        // Map to the source model to look up the article year and color the row by age.
         const QModelIndex sourceIndex = mapToSource(index);
         const QModelIndex yearIndex = sourceModel()->index(sourceIndex.row(), JournalColumns::Year);
         const int year = sourceModel()->data(yearIndex, Qt::EditRole).toInt();
