@@ -15,6 +15,13 @@ qt_add_executable(q3
     main.cpp
     MainWindow.cpp
     MainWindow.h
+    JournalConstants.h
+    JournalFilterProxy.cpp
+    JournalFilterProxy.h
+    JournalModel.cpp
+    JournalModel.h
+    SpinBoxDelegate.cpp
+    SpinBoxDelegate.h
 )
 
 target_link_libraries(q3 PRIVATE Qt6::Widgets)
