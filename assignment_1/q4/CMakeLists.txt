@@ -20,6 +20,8 @@ qt_add_executable(q4
     JournalFilterProxy.h
     JournalModel.cpp
     JournalModel.h
+    JournalValidation.cpp
+    JournalValidation.h
     SpinBoxDelegate.cpp
     SpinBoxDelegate.h
 )

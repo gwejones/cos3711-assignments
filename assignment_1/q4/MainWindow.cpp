@@ -3,6 +3,7 @@
 #include "JournalFilterProxy.h"
 #include "JournalModel.h"
 #include "SpinBoxDelegate.h"
+#include "JournalValidation.h"
 #include <QAbstractItemView>
 #include <QComboBox>
 #include <QDate>
@@ -12,6 +13,7 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QSplitter>
@@ -34,6 +36,15 @@ static QStandardItem *makeNumberItem(int value)
     item->setData(value, Qt::EditRole);
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     return item;
+}
+
+static void showValidationError(QWidget *parent, QLineEdit *editor, const QString &message)
+{
+    QMessageBox::warning(parent, QStringLiteral("Invalid Input"), message);
+    if (editor != nullptr) {
+        editor->setFocus();
+        editor->selectAll();
+    }
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -214,6 +225,34 @@ void MainWindow::onAddClicked()
     const QString title = m_titleEdit->text().trimmed();
     const QString journal = m_journalEdit->text().trimmed();
     const QString pages = m_pagesEdit->text().trimmed();
+
+    if (!JournalValidation::isValidAuthor(author)) {
+        showValidationError(
+            this, m_authorEdit,
+            QStringLiteral("Author names may only contain letters, spaces, and hyphens (e.g. \"SZ "
+                           "Mbanjwa-Mhlana\")."));
+        return;
+    }
+    if (!JournalValidation::isValidTitle(title)) {
+        showValidationError(
+            this, m_titleEdit,
+            QStringLiteral("Article titles may contain letters, numbers, and spaces, but each word "
+                           "must be only letters or only numbers."));
+        return;
+    }
+    if (!JournalValidation::isValidJournal(journal)) {
+        showValidationError(
+            this, m_journalEdit,
+            QStringLiteral("Journal titles may contain letters, numbers, and spaces, but each word "
+                           "must be only letters or only numbers."));
+        return;
+    }
+    if (!JournalValidation::isValidPages(pages)) {
+        showValidationError(
+            this, m_pagesEdit,
+            QStringLiteral("Pages must be in the form \"12-15\" or \"121 - 155\"."));
+        return;
+    }
 
     QList<QStandardItem *> row;
     row << makeTextItem(author)

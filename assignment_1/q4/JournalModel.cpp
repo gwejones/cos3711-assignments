@@ -1,5 +1,6 @@
 #include "JournalModel.h"
 #include "JournalConstants.h"
+#include "JournalValidation.h"
 #include <QDate>
 
 JournalModel::JournalModel(QObject *parent)
@@ -32,6 +33,33 @@ bool JournalModel::setData(const QModelIndex &index, const QVariant &value, int 
                              this->index(index.row(), lastColumn),
                              {Qt::BackgroundRole, Qt::EditRole, Qt::DisplayRole});
             return true;
+        }
+    }
+    if (role == Qt::EditRole || role == Qt::DisplayRole) {
+        const QString text = value.toString().trimmed();
+        switch (index.column()) {
+        case JournalColumns::Author:
+            if (!JournalValidation::isValidAuthor(text)) {
+                return false;
+            }
+            return QStandardItemModel::setData(index, text, role);
+        case JournalColumns::Title:
+            if (!JournalValidation::isValidTitle(text)) {
+                return false;
+            }
+            return QStandardItemModel::setData(index, text, role);
+        case JournalColumns::Journal:
+            if (!JournalValidation::isValidJournal(text)) {
+                return false;
+            }
+            return QStandardItemModel::setData(index, text, role);
+        case JournalColumns::Pages:
+            if (!JournalValidation::isValidPages(text)) {
+                return false;
+            }
+            return QStandardItemModel::setData(index, text, role);
+        default:
+            break;
         }
     }
     return QStandardItemModel::setData(index, value, role);
