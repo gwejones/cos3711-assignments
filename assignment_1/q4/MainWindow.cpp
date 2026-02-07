@@ -3,6 +3,7 @@
 #include "JournalFilterProxy.h"
 #include "JournalModel.h"
 #include "SpinBoxDelegate.h"
+#include "TextValidationDelegate.h"
 #include "JournalValidation.h"
 #include <QAbstractItemView>
 #include <QComboBox>
@@ -15,6 +16,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QRegularExpressionValidator>
 #include <QSpinBox>
 #include <QSplitter>
 #include <QStandardItemModel>
@@ -86,6 +88,14 @@ void MainWindow::setupUi()
     QLineEdit *journalEdit = new QLineEdit(detailsGroup);
     QLineEdit *pagesEdit = new QLineEdit(detailsGroup);
     pagesEdit->setPlaceholderText(QStringLiteral("e.g. 12-14"));
+    authorEdit->setValidator(
+        new QRegularExpressionValidator(JournalValidation::kAuthorPattern, authorEdit));
+    titleEdit->setValidator(
+        new QRegularExpressionValidator(JournalValidation::kTitlePattern, titleEdit));
+    journalEdit->setValidator(
+        new QRegularExpressionValidator(JournalValidation::kTitlePattern, journalEdit));
+    pagesEdit->setValidator(
+        new QRegularExpressionValidator(JournalValidation::kPagesPattern, pagesEdit));
 
     QSpinBox *yearSpin = new QSpinBox(detailsGroup);
     yearSpin->setRange(1, m_currentYear);
@@ -194,6 +204,18 @@ void MainWindow::setupUi()
         JournalColumns::Volume, new SpinBoxDelegate(1, 10000, tableView));
     tableView->setItemDelegateForColumn(
         JournalColumns::Issue, new SpinBoxDelegate(1, 10000, tableView));
+    tableView->setItemDelegateForColumn(
+        JournalColumns::Author,
+        new TextValidationDelegate(JournalValidation::kAuthorPattern, tableView));
+    tableView->setItemDelegateForColumn(
+        JournalColumns::Title,
+        new TextValidationDelegate(JournalValidation::kTitlePattern, tableView));
+    tableView->setItemDelegateForColumn(
+        JournalColumns::Journal,
+        new TextValidationDelegate(JournalValidation::kTitlePattern, tableView));
+    tableView->setItemDelegateForColumn(
+        JournalColumns::Pages,
+        new TextValidationDelegate(JournalValidation::kPagesPattern, tableView));
 
     connect(addButton, &QPushButton::clicked, this, &MainWindow::onAddClicked);
     connect(removeButton, &QPushButton::clicked, this, &MainWindow::onRemoveClicked);

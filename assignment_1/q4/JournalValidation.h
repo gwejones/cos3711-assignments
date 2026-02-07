@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QRegularExpression>
 #include <QString>
 
 /// Static valiators for journal/article fields used in UI and model edits.
@@ -14,4 +15,11 @@ public:
     static bool isValidJournal(const QString &value);
     /// Page ranges: digits separated by a single hyphen with optional spaces (e.g. "12-15").
     static bool isValidPages(const QString &value);
+
+    /// Regex used by validators for author names.
+    static const QRegularExpression kAuthorPattern;
+    /// Regex used by validators for article/journal titles.
+    static const QRegularExpression kTitlePattern;
+    /// Regex used by validators for page ranges.
+    static const QRegularExpression kPagesPattern;
 };

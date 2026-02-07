@@ -1,5 +1,10 @@
 #include "JournalValidation.h"
-#include <QRegularExpression>
+
+const QRegularExpression JournalValidation::kTitlePattern(
+    QStringLiteral("^(?:[A-Za-z]+|[0-9]+)(?: +(?:[A-Za-z]+|[0-9]+))*$"));
+const QRegularExpression JournalValidation::kAuthorPattern(
+    QStringLiteral("^[A-Za-z]+(?:-[A-Za-z]+)*(?: [A-Za-z]+(?:-[A-Za-z]+)*)*$"));
+const QRegularExpression JournalValidation::kPagesPattern(QStringLiteral("^\\d+\\s*-\\s*\\d+$"));
 
 bool JournalValidation::isValidTitle(const QString &value)
 {
@@ -7,9 +12,7 @@ bool JournalValidation::isValidTitle(const QString &value)
     if (trimmed.isEmpty()) {
         return false;
     }
-    static const QRegularExpression pattern(
-        QStringLiteral("^(?:[A-Za-z]+|[0-9]+)(?: +(?:[A-Za-z]+|[0-9]+))*$"));
-    return pattern.match(trimmed).hasMatch();
+    return kTitlePattern.match(trimmed).hasMatch();
 }
 
 bool JournalValidation::isValidAuthor(const QString &value)
@@ -18,9 +21,7 @@ bool JournalValidation::isValidAuthor(const QString &value)
     if (trimmed.isEmpty()) {
         return false;
     }
-    static const QRegularExpression pattern(
-        QStringLiteral("^[A-Za-z]+(?:-[A-Za-z]+)*(?: [A-Za-z]+(?:-[A-Za-z]+)*)*$"));
-    return pattern.match(trimmed).hasMatch();
+    return kAuthorPattern.match(trimmed).hasMatch();
 }
 
 bool JournalValidation::isValidJournal(const QString &value)
@@ -34,6 +35,5 @@ bool JournalValidation::isValidPages(const QString &value)
     if (trimmed.isEmpty()) {
         return false;
     }
-    static const QRegularExpression pattern(QStringLiteral("^\\d+\\s*-\\s*\\d+$"));
-    return pattern.match(trimmed).hasMatch();
+    return kPagesPattern.match(trimmed).hasMatch();
 }

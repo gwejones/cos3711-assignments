@@ -24,6 +24,8 @@ qt_add_executable(q4
     JournalValidation.h
     SpinBoxDelegate.cpp
     SpinBoxDelegate.h
+    TextValidationDelegate.cpp
+    TextValidationDelegate.h
 )
 
 target_link_libraries(q4 PRIVATE Qt6::Widgets)
