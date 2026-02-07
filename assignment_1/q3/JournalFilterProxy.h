@@ -14,7 +14,9 @@ public:
     void setWildcardFilter(const QString &pattern);
 
 protected:
+    /// Override default proxy filtering to apply the wildcard regex to the selected column.
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    /// Overide to customise background for age-based highlighting.
     QVariant data(const QModelIndex &index, int role) const override;
 
 private:
