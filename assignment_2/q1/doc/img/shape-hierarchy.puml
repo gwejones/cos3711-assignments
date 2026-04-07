@@ -1,0 +1,48 @@
+@startuml
+abstract class Shape {
+  #penWidth: int
+  #penColour: QColor
+  #fillColour: QColor
+  +Shape()
+  +draw() {abstract}
+}
+
+abstract class Shape1Property {
+  #property1: int
+  +Shape1Property()
+  +draw() {abstract}
+}
+
+abstract class Shape2Property {
+  #property2: int
+  +Shape2Property()
+  +draw() {abstract}
+}
+
+class Circle {
+  +Circle()
+  +draw()
+}
+
+class Square {
+  +Square()
+  +draw()
+}
+
+class Ellipse {
+  +Ellipse()
+  +draw()
+}
+
+class Rectangle {
+  +Rectangle()
+  +draw()
+}
+
+Shape <|-- Shape1Property
+Shape1Property <|-- Circle
+Shape1Property <|-- Shape2Property
+Shape1Property <|-- Square
+Shape2Property <|-- Ellipse
+Shape2Property <|-- Rectangle
+@enduml

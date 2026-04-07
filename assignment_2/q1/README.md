@@ -7,12 +7,15 @@ values, and subclasses hold a number of additional properties (squares and circl
 property - the radius of a circle for example, whereas rectangles and ellipses need
 an additional property - length and width of the two sides of a rectangle, for
 example). The Shape, Shape1Property (for circles and squares), and Shape2Property (for
-ellipses and rectangles) classes are abstract classes (the draw() function being the pure virtual
-function in all of them).
+ellipses and rectangles) classes are abstract classes (the draw() function being the pure virtual function in all of them).
+
+![Shape UML](doc/img/shape-hierarchy.png)
 
 Use this structure to create an application that will draw the required shape in a GUI
 window. The UML diagram gives only the basic structure, and you will need to add getter and
 setters, other constructors, and helper functions as you need them.
+
+![Q1 Brief Screenshot](doc/img/q1-brief-screenshot.png)
 
 Note that if you cannot get the image to appear, you should at least display the shape
 properties in a GUI window so that the following three questions can also be completed.
