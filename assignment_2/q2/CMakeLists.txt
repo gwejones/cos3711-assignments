@@ -27,6 +27,8 @@ qt_add_executable(q2
     Ellipse.h
     Rectangle.cpp
     Rectangle.h
+    ShapeList.cpp
+    ShapeList.h
     ShapeFactory.cpp
     ShapeFactory.h
     DrawingCanvas.cpp
