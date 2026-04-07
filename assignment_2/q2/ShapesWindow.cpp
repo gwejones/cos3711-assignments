@@ -28,7 +28,7 @@ constexpr int kWindowHeight = 420;
 ShapesWindow::ShapesWindow(QWidget *parent)
     : QWidget(parent)
 {
-    setWindowTitle("Shapes - Question 1");
+    setWindowTitle("Shapes - Question 2");
 
     QLabel *shapeLabel = new QLabel("Shape");
     QLabel *property1Label = new QLabel("Property 1");

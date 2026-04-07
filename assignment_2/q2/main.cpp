@@ -1,11 +1,12 @@
 #include <QApplication>
-#include <QWidget>
+
+#include "ShapesWindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QWidget window;
+    ShapesWindow window;
     window.show();
 
     return app.exec();
