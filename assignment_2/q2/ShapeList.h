@@ -4,8 +4,10 @@
 
 class Shape;
 
-/// Singleton manager for the application's single list of Shape instances.
-/// Owns the shapes in a QList and tracks the current position for navigation.
+/**
+ * Singleton manager for the application's single list of Shape instances.
+ * Owns the shapes in a QList and tracks the current position for navigation.
+ */
 class ShapeList
 {
 public:
