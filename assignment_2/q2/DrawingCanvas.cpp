@@ -19,18 +19,12 @@ DrawingCanvas::DrawingCanvas(QWidget *parent)
     setMinimumHeight(kCanvasMinimumHeight);
 }
 
-DrawingCanvas::~DrawingCanvas()
-{
-    delete m_shape;
-}
-
 void DrawingCanvas::setShape(Shape *shape)
 {
     if (m_shape == shape) {
         return;
     }
 
-    delete m_shape;
     m_shape = shape;
     update();
 }

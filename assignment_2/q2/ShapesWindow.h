@@ -7,6 +7,7 @@
 class QColor;
 class QComboBox;
 class QLabel;
+class QPushButton;
 class QSpinBox;
 class QString;
 
@@ -25,11 +26,15 @@ public:
 private slots:
     void onShapeSelectionChanged(int index);
     void onCreateShapeClicked();
+    void onPreviousClicked();
+    void onNextClicked();
 
 private:
     static QColor toColour(const QString &name);
 
     void updatePropertyState();
+    void updateNavigationState();
+    void displayCurrentShape();
     void createShapeFromInput();
 
     QComboBox *m_shapeComboBox = nullptr;
@@ -39,6 +44,8 @@ private:
     QSpinBox *m_penWidthSpinBox = nullptr;
     QComboBox *m_penColourComboBox = nullptr;
     QComboBox *m_fillColourComboBox = nullptr;
+    QPushButton *m_previousButton = nullptr;
+    QPushButton *m_nextButton = nullptr;
     DrawingCanvas *m_canvas = nullptr;
     ShapeFactory m_shapeFactory;
 };

@@ -2,10 +2,12 @@
 
 #include "DrawingCanvas.h"
 #include "Shape.h"
+#include "ShapeList.h"
 
 #include <QColor>
 #include <QComboBox>
 #include <QGridLayout>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QSpinBox>
@@ -61,6 +63,8 @@ ShapesWindow::ShapesWindow(QWidget *parent)
     m_fillColourComboBox->setCurrentText("Green");
 
     QPushButton *createShapeButton = new QPushButton("Create shape");
+    m_previousButton = new QPushButton("Previous");
+    m_nextButton = new QPushButton("Next");
 
     m_canvas = new DrawingCanvas();
 
@@ -79,9 +83,15 @@ ShapesWindow::ShapesWindow(QWidget *parent)
     controlsLayout->addWidget(m_fillColourComboBox, 3, 1);
     controlsLayout->addWidget(createShapeButton, 2, 2, 2, 2);
 
+    QHBoxLayout *navigationLayout = new QHBoxLayout();
+    navigationLayout->addWidget(m_previousButton);
+    navigationLayout->addStretch();
+    navigationLayout->addWidget(m_nextButton);
+
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addLayout(controlsLayout);
     mainLayout->addWidget(m_canvas);
+    mainLayout->addLayout(navigationLayout);
     mainLayout->setContentsMargins(12, 12, 12, 12);
     mainLayout->setSpacing(10);
 
@@ -93,9 +103,18 @@ ShapesWindow::ShapesWindow(QWidget *parent)
             &QPushButton::clicked,
             this,
             &ShapesWindow::onCreateShapeClicked);
+    connect(m_previousButton,
+            &QPushButton::clicked,
+            this,
+            &ShapesWindow::onPreviousClicked);
+    connect(m_nextButton,
+            &QPushButton::clicked,
+            this,
+            &ShapesWindow::onNextClicked);
 
     updatePropertyState();
     onCreateShapeClicked();
+    updateNavigationState();
     resize(kWindowWidth, kWindowHeight);
 }
 
@@ -113,6 +132,29 @@ void ShapesWindow::onShapeSelectionChanged(int index)
 void ShapesWindow::onCreateShapeClicked()
 {
     createShapeFromInput();
+    updateNavigationState();
+}
+
+void ShapesWindow::onPreviousClicked()
+{
+    ShapeList &shapeList = ShapeList::instance();
+    if (!shapeList.movePrevious()) {
+        return;
+    }
+
+    displayCurrentShape();
+    updateNavigationState();
+}
+
+void ShapesWindow::onNextClicked()
+{
+    ShapeList &shapeList = ShapeList::instance();
+    if (!shapeList.moveNext()) {
+        return;
+    }
+
+    displayCurrentShape();
+    updateNavigationState();
 }
 
 void ShapesWindow::updatePropertyState()
@@ -122,6 +164,19 @@ void ShapesWindow::updatePropertyState()
 
     m_property2Label->setEnabled(needsSecondProperty);
     m_property2SpinBox->setEnabled(needsSecondProperty);
+}
+
+void ShapesWindow::updateNavigationState()
+{
+    const ShapeList &shapeList = ShapeList::instance();
+    m_previousButton->setEnabled(shapeList.hasPrevious());
+    m_nextButton->setEnabled(shapeList.hasNext());
+}
+
+void ShapesWindow::displayCurrentShape()
+{
+    ShapeList &shapeList = ShapeList::instance();
+    m_canvas->setShape(shapeList.currentShape());
 }
 
 void ShapesWindow::createShapeFromInput()
@@ -139,5 +194,7 @@ void ShapesWindow::createShapeFromInput()
                                               fillColour,
                                               property1,
                                               property2);
-    m_canvas->setShape(shape);
+    ShapeList &shapeList = ShapeList::instance();
+    shapeList.addShape(shape);
+    displayCurrentShape();
 }
