@@ -8,6 +8,7 @@
 class Rectangle : public Shape2Property
 {
     Q_OBJECT
+    Q_CLASSINFO("ShapeXmlType", "Rectangle")
 
 public:
     Q_INVOKABLE Rectangle(QObject *parent = nullptr);

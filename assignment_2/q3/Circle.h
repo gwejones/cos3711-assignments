@@ -8,6 +8,7 @@
 class Circle : public Shape1Property
 {
     Q_OBJECT
+    Q_CLASSINFO("ShapeXmlType", "Circle")
 
 public:
     Q_INVOKABLE Circle(QObject *parent = nullptr);

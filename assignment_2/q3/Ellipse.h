@@ -8,6 +8,7 @@
 class Ellipse : public Shape2Property
 {
     Q_OBJECT
+    Q_CLASSINFO("ShapeXmlType", "Ellipse")
 
 public:
     Q_INVOKABLE Ellipse(QObject *parent = nullptr);

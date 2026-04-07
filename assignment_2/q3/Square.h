@@ -8,6 +8,7 @@
 class Square : public Shape1Property
 {
     Q_OBJECT
+    Q_CLASSINFO("ShapeXmlType", "Square")
 
 public:
     Q_INVOKABLE Square(QObject *parent = nullptr);
