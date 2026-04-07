@@ -5,6 +5,9 @@
 class QPaintEvent;
 class Shape;
 
+/**
+ * Widget responsibile for rendering the currently selected shape preview.
+ */
 class DrawingCanvas : public QWidget
 {
 public:

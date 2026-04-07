@@ -5,6 +5,9 @@
 class QPainter;
 class QRect;
 
+/**
+ * Defines the common interface and shared styling data for drawable shapes in the applicaiton.
+ */
 class Shape
 {
 public:

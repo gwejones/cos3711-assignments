@@ -2,6 +2,9 @@
 
 #include "Shape1Property.h"
 
+/**
+ * Concrete shape that draws a circle using the first propety as radius.
+ */
 class Circle : public Shape1Property
 {
 public:

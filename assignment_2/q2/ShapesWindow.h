@@ -12,6 +12,9 @@ class QString;
 
 class DrawingCanvas;
 
+/**
+ * Main window that gathers user input and coordinates shape creation.
+ */
 class ShapesWindow : public QWidget
 {
     Q_OBJECT

@@ -5,6 +5,9 @@
 
 class Shape;
 
+/**
+ * Factory class that instanciates shape objects from UI parameters.
+ */
 class ShapeFactory
 {
 public:

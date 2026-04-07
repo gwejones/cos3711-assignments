@@ -2,6 +2,9 @@
 
 #include "Shape1Property.h"
 
+/**
+ * Base class for shapes that use two configurable geometric properties.
+ */
 class Shape2Property : public Shape1Property
 {
 public:

@@ -2,6 +2,9 @@
 
 #include "Shape1Property.h"
 
+/**
+ * Concrete shape that draws a square using the first property as side length.
+ */
 class Square : public Shape1Property
 {
 public:

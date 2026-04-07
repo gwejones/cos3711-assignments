@@ -2,6 +2,9 @@
 
 #include "Shape2Property.h"
 
+/**
+ * Concrete shape that draws an ellipse from width and height values.
+ */
 class Ellipse : public Shape2Property
 {
 public:

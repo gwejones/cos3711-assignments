@@ -2,6 +2,9 @@
 
 #include "Shape2Property.h"
 
+/**
+ * Concrete shape that draws a rectangle from width and height values.
+ */
 class Rectangle : public Shape2Property
 {
 public:
