@@ -2,12 +2,18 @@
 
 #include <QPainter>
 
+Ellipse::Ellipse(QObject *parent)
+    : Ellipse(1, Qt::black, Qt::white, 1, 1, parent)
+{
+}
+
 Ellipse::Ellipse(int penWidth,
                  const QColor &penColour,
                  const QColor &fillColour,
                  int width,
-                 int height)
-    : Shape2Property(penWidth, penColour, fillColour, width, height)
+                 int height,
+                 QObject *parent)
+    : Shape2Property(penWidth, penColour, fillColour, width, height, parent)
 {
 }
 

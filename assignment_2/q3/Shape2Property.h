@@ -7,12 +7,16 @@
  */
 class Shape2Property : public Shape1Property
 {
+    Q_OBJECT
+    Q_PROPERTY(int property2 READ property2 WRITE setProperty2)
+
 public:
-    Shape2Property(int penWidth,
-                   const QColor &penColour,
-                   const QColor &fillColour,
-                   int property1,
-                   int property2);
+    explicit Shape2Property(int penWidth = 1,
+                            const QColor &penColour = Qt::black,
+                            const QColor &fillColour = Qt::white,
+                            int property1 = 1,
+                            int property2 = 1,
+                            QObject *parent = nullptr);
     ~Shape2Property() override = default;
 
     int property2() const;

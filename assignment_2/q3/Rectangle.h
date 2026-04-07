@@ -7,12 +7,16 @@
  */
 class Rectangle : public Shape2Property
 {
+    Q_OBJECT
+
 public:
+    Q_INVOKABLE Rectangle(QObject *parent = nullptr);
     Rectangle(int penWidth,
               const QColor &penColour,
               const QColor &fillColour,
               int width,
-              int height);
+              int height,
+              QObject *parent = nullptr);
 
     void draw(QPainter &painter, const QRect &bounds) const override;
 };

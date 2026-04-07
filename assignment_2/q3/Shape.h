@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QColor>
+#include <QObject>
 
 class QPainter;
 class QRect;
@@ -9,11 +10,18 @@ class QRect;
  * Defines the common interface and shared styling data for drawable shapes in the applicaiton.
  */
 class Shape
+    : public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(int penWidth READ penWidth WRITE setPenWidth)
+    Q_PROPERTY(QColor penColour READ penColour WRITE setPenColour)
+    Q_PROPERTY(QColor fillColour READ fillColour WRITE setFillColour)
+
 public:
-    Shape(int penWidth = 1,
-          const QColor &penColour = Qt::black,
-          const QColor &fillColour = Qt::white);
+    explicit Shape(int penWidth = 1,
+                   const QColor &penColour = Qt::black,
+                   const QColor &fillColour = Qt::white,
+                   QObject *parent = nullptr);
     virtual ~Shape() = default;
 
     virtual void draw(QPainter &painter, const QRect &bounds) const = 0;

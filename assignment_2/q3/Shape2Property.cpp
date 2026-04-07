@@ -6,8 +6,9 @@ Shape2Property::Shape2Property(int penWidth,
                                const QColor &penColour,
                                const QColor &fillColour,
                                int property1,
-                               int property2)
-    : Shape1Property(penWidth, penColour, fillColour, property1)
+                               int property2,
+                               QObject *parent)
+    : Shape1Property(penWidth, penColour, fillColour, property1, parent)
 {
     setProperty2(property2);
 }

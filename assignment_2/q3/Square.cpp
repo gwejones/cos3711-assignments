@@ -2,11 +2,17 @@
 
 #include <QPainter>
 
+Square::Square(QObject *parent)
+    : Square(1, Qt::black, Qt::white, 1, parent)
+{
+}
+
 Square::Square(int penWidth,
                const QColor &penColour,
                const QColor &fillColour,
-               int sideLength)
-    : Shape1Property(penWidth, penColour, fillColour, sideLength)
+               int sideLength,
+               QObject *parent)
+    : Shape1Property(penWidth, penColour, fillColour, sideLength, parent)
 {
 }
 

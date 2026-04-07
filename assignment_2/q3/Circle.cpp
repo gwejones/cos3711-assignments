@@ -2,11 +2,17 @@
 
 #include <QPainter>
 
+Circle::Circle(QObject *parent)
+    : Circle(1, Qt::black, Qt::white, 1, parent)
+{
+}
+
 Circle::Circle(int penWidth,
                const QColor &penColour,
                const QColor &fillColour,
-               int radius)
-    : Shape1Property(penWidth, penColour, fillColour, radius)
+               int radius,
+               QObject *parent)
+    : Shape1Property(penWidth, penColour, fillColour, radius, parent)
 {
 }
 

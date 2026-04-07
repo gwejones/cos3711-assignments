@@ -7,8 +7,12 @@
 
 #include <algorithm>
 
-Shape::Shape(int penWidth, const QColor &penColour, const QColor &fillColour)
-    : m_penColour(penColour)
+Shape::Shape(int penWidth,
+             const QColor &penColour,
+             const QColor &fillColour,
+             QObject *parent)
+    : QObject(parent)
+    , m_penColour(penColour)
     , m_fillColour(fillColour)
 {
     setPenWidth(penWidth);
