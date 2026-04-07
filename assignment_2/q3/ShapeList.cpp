@@ -32,6 +32,15 @@ Shape *ShapeList::currentShape() const
     return m_shapes.at(m_currentIndex);
 }
 
+Shape *ShapeList::shapeAt(int index) const
+{
+    if (index < 0 || index >= m_shapes.size()) {
+        return nullptr;
+    }
+
+    return m_shapes.at(index);
+}
+
 bool ShapeList::hasNext() const
 {
     return m_currentIndex >= 0 && m_currentIndex < (m_shapes.size() - 1);
@@ -59,6 +68,16 @@ bool ShapeList::movePrevious()
     }
 
     --m_currentIndex;
+    return true;
+}
+
+bool ShapeList::setCurrentIndex(int index)
+{
+    if (index < 0 || index >= m_shapes.size()) {
+        return false;
+    }
+
+    m_currentIndex = index;
     return true;
 }
 

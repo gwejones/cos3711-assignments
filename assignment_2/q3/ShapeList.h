@@ -16,11 +16,13 @@ public:
 
     void addShape(Shape *shape);
     Shape *currentShape() const;
+    Shape *shapeAt(int index) const;
 
     bool hasNext() const;
     bool hasPrevious() const;
     bool moveNext();
     bool movePrevious();
+    bool setCurrentIndex(int index);
 
     int size() const;
     bool isEmpty() const;
