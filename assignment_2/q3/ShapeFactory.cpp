@@ -6,7 +6,56 @@
 #include "Shape.h"
 #include "Square.h"
 
+#include <QMetaClassInfo>
+#include <QMetaObject>
+#include <QMetaProperty>
+#include <QObject>
 #include <QString>
+#include <QStringList>
+
+static const QList<const QMetaObject *> s_registeredShapeMetaObjects = {
+    &Circle::staticMetaObject,
+    &Square::staticMetaObject,
+    &Ellipse::staticMetaObject,
+    &Rectangle::staticMetaObject
+};
+
+static QString xmlTypeForMetaObject(const QMetaObject &metaObject)
+{
+    const int classInfoIndex = metaObject.indexOfClassInfo("ShapeXmlType");
+    if (classInfoIndex >= 0) {
+        return QString::fromLatin1(metaObject.classInfo(classInfoIndex).value());
+    }
+
+    return QString::fromLatin1(metaObject.className());
+}
+
+static const QMetaObject *findMetaObjectForType(const QString &shapeType)
+{
+    for (const QMetaObject *metaObject : s_registeredShapeMetaObjects) {
+        if (metaObject == nullptr) {
+            continue;
+        }
+
+        const QString xmlType = xmlTypeForMetaObject(*metaObject);
+        if (shapeType.compare(xmlType, Qt::CaseInsensitive) == 0) {
+            return metaObject;
+        }
+    }
+
+    return nullptr;
+}
+
+static bool isRegisteredTypeMetaObject(const QMetaObject &metaObject)
+{
+    for (const QMetaObject *registeredMetaObject : s_registeredShapeMetaObjects) {
+        if (registeredMetaObject == &metaObject) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 Shape *ShapeFactory::createShape(const QString &shapeType,
                                  int penWidth,
@@ -15,17 +64,92 @@ Shape *ShapeFactory::createShape(const QString &shapeType,
                                  int property1,
                                  int property2) const
 {
-    if (shapeType == "Circle") {
-        return new Circle(penWidth, penColour, fillColour, property1);
+    Shape *shape = createShape(shapeType, nullptr);
+    if (shape == nullptr) {
+        return nullptr;
     }
 
-    if (shapeType == "Square") {
-        return new Square(penWidth, penColour, fillColour, property1);
+    shape->setPenWidth(penWidth);
+    shape->setPenColour(penColour);
+    shape->setFillColour(fillColour);
+
+    if (!shape->setProperty("property1", property1)) {
+        delete shape;
+        return nullptr;
     }
 
-    if (shapeType == "Rectangle") {
-        return new Rectangle(penWidth, penColour, fillColour, property1, property2);
+    if (hasSecondProperty(shapeType) && !shape->setProperty("property2", property2)) {
+        delete shape;
+        return nullptr;
     }
 
-    return new Ellipse(penWidth, penColour, fillColour, property1, property2);
+    return shape;
+}
+
+Shape *ShapeFactory::createShape(const QString &shapeType, QObject *parent) const
+{
+    const QMetaObject *metaObject = findMetaObjectForType(shapeType);
+    if (metaObject == nullptr) {
+        return nullptr;
+    }
+
+    QObject *object = metaObject->newInstance(Q_ARG(QObject *, parent));
+    if (object == nullptr) {
+        return nullptr;
+    }
+
+    Shape *shape = qobject_cast<Shape *>(object);
+    if (shape == nullptr) {
+        delete object;
+        return nullptr;
+    }
+
+    return shape;
+}
+
+bool ShapeFactory::isSupportedType(const QString &shapeType) const
+{
+    return findMetaObjectForType(shapeType) != nullptr;
+}
+
+bool ShapeFactory::hasSecondProperty(const QString &shapeType) const
+{
+    const QMetaObject *metaObject = findMetaObjectForType(shapeType);
+    if (metaObject == nullptr) {
+        return false;
+    }
+
+    return metaObject->indexOfProperty("property2") >= 0;
+}
+
+QString ShapeFactory::typeForShape(const Shape *shape) const
+{
+    if (shape == nullptr) {
+        return QString();
+    }
+
+    const QMetaObject *metaObject = shape->metaObject();
+    while (metaObject != nullptr) {
+        if (isRegisteredTypeMetaObject(*metaObject)) {
+            return xmlTypeForMetaObject(*metaObject);
+        }
+        metaObject = metaObject->superClass();
+    }
+
+    return QString();
+}
+
+QStringList ShapeFactory::supportedTypes() const
+{
+    QStringList types;
+
+    for (const QMetaObject *metaObject : s_registeredShapeMetaObjects) {
+        if (metaObject == nullptr) {
+            continue;
+        }
+
+        types.append(xmlTypeForMetaObject(*metaObject));
+    }
+
+    return types;
 }
