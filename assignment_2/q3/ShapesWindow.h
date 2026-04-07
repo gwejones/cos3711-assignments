@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ShapeFactory.h"
+#include "ShapeXmlSerializer.h"
 
 #include <QWidget>
 
@@ -31,11 +32,13 @@ private slots:
 
 private:
     static QColor toColour(const QString &name);
+    static QString resolveShapesXmlPath();
 
     void updatePropertyState();
     void updateNavigationState();
     void displayCurrentShape();
     void createShapeFromInput();
+    void loadShapesFromXml();
 
     QComboBox *m_shapeComboBox = nullptr;
     QSpinBox *m_property1SpinBox = nullptr;
@@ -48,4 +51,5 @@ private:
     QPushButton *m_nextButton = nullptr;
     DrawingCanvas *m_canvas = nullptr;
     ShapeFactory m_shapeFactory;
+    ShapeXmlSerializer m_shapeXmlSerializer;
 };

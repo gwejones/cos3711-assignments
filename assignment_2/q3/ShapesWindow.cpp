@@ -4,14 +4,19 @@
 #include "Shape.h"
 #include "ShapeList.h"
 
+#include <QCoreApplication>
 #include <QColor>
 #include <QComboBox>
+#include <QDebug>
+#include <QDir>
+#include <QFileInfo>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QString>
+#include <QStringList>
 #include <QVBoxLayout>
 
 namespace
@@ -113,7 +118,7 @@ ShapesWindow::ShapesWindow(QWidget *parent)
             &ShapesWindow::onNextClicked);
 
     updatePropertyState();
-    onCreateShapeClicked();
+    loadShapesFromXml();
     updateNavigationState();
     resize(kWindowWidth, kWindowHeight);
 }
@@ -122,6 +127,25 @@ QColor ShapesWindow::toColour(const QString &name)
 {
     const QColor colour(name.toLower());
     return colour.isValid() ? colour : QColor(Qt::black);
+}
+
+QString ShapesWindow::resolveShapesXmlPath()
+{
+    const QString applicationDirPath = QCoreApplication::applicationDirPath();
+    const QStringList candidatePaths = {
+        QDir::current().filePath("data/shapes.xml"),
+        QDir(applicationDirPath).filePath("data/shapes.xml"),
+        QDir(applicationDirPath).filePath("../data/shapes.xml")
+    };
+
+    for (const QString &candidatePath : candidatePaths) {
+        const QFileInfo fileInfo(candidatePath);
+        if (fileInfo.exists() && fileInfo.isFile()) {
+            return fileInfo.absoluteFilePath();
+        }
+    }
+
+    return QDir(applicationDirPath).filePath("../data/shapes.xml");
 }
 
 void ShapesWindow::onShapeSelectionChanged(int index)
@@ -160,7 +184,7 @@ void ShapesWindow::onNextClicked()
 void ShapesWindow::updatePropertyState()
 {
     const QString shapeType = m_shapeComboBox->currentText();
-    const bool needsSecondProperty = (shapeType == "Ellipse" || shapeType == "Rectangle");
+    const bool needsSecondProperty = m_shapeFactory.hasSecondProperty(shapeType);
 
     m_property2Label->setEnabled(needsSecondProperty);
     m_property2SpinBox->setEnabled(needsSecondProperty);
@@ -194,7 +218,24 @@ void ShapesWindow::createShapeFromInput()
                                               fillColour,
                                               property1,
                                               property2);
+    if (shape == nullptr) {
+        qWarning() << QString("Failed to create shape from UI input for type: %1").arg(shapeType);
+        return;
+    }
+
     ShapeList &shapeList = ShapeList::instance();
     shapeList.addShape(shape);
+    displayCurrentShape();
+}
+
+void ShapesWindow::loadShapesFromXml()
+{
+    const QString shapeXmlPath = resolveShapesXmlPath();
+    ShapeList &shapeList = ShapeList::instance();
+
+    if (!m_shapeXmlSerializer.loadFromFile(shapeXmlPath, shapeList)) {
+        qWarning() << QString("Startup XML load failed: %1").arg(shapeXmlPath);
+    }
+
     displayCurrentShape();
 }
