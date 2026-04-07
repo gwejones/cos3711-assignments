@@ -1,0 +1,6 @@
+<shapeList>
+  <shape type="Square" pw="1" pc="Red" fc="Black" p1="110" p2="" />
+  <shape type="Circle" pw="2" pc="Green" fc="Blue" p1="75" p2="" />
+  <shape type="Ellipse" pw="3" pc="Black" fc="Red" p1="140" p2="55" />
+  <shape type="Rectangle" pw="4" pc="Blue" fc="Green" p1="75" p2="120" />
+</shapeList>
