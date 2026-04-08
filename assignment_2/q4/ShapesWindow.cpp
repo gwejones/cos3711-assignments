@@ -70,6 +70,7 @@ ShapesWindow::ShapesWindow(QWidget *parent)
     QPushButton *createShapeButton = new QPushButton("Create shape");
     m_backupButton = new QPushButton("Backup");
     m_restoreButton = new QPushButton("Restore");
+    m_restoreButton->setEnabled(false);
     m_previousButton = new QPushButton("Previous");
     m_nextButton = new QPushButton("Next");
 
@@ -186,6 +187,7 @@ void ShapesWindow::onBackupClicked()
 
     delete m_backupMemento;
     m_backupMemento = new ShapeListMemento(shapeList.createMemento());
+    m_restoreButton->setEnabled(true);
 }
 
 void ShapesWindow::onRestoreClicked()
@@ -197,6 +199,9 @@ void ShapesWindow::onRestoreClicked()
 
     ShapeList &shapeList = ShapeList::instance();
     shapeList.setMemento(*m_backupMemento);
+    if (!shapeList.isEmpty()) {
+        shapeList.setCurrentIndex(0);
+    }
     displayCurrentShape();
     updateNavigationState();
 }
