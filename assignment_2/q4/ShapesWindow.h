@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ShapeFactory.h"
+#include "ShapeListMemento.h"
 #include "ShapeXmlSerializer.h"
 
 #include <QWidget>
@@ -23,6 +24,7 @@ class ShapesWindow : public QWidget
 
 public:
     explicit ShapesWindow(QWidget *parent = nullptr);
+    ~ShapesWindow() override;
 
 private slots:
     void onShapeSelectionChanged(int index);
@@ -52,4 +54,5 @@ private:
     DrawingCanvas *m_canvas = nullptr;
     ShapeFactory m_shapeFactory;
     ShapeXmlSerializer m_shapeXmlSerializer;
+    ShapeListMemento *m_backupMemento = nullptr;
 };

@@ -123,6 +123,11 @@ ShapesWindow::ShapesWindow(QWidget *parent)
     resize(kWindowWidth, kWindowHeight);
 }
 
+ShapesWindow::~ShapesWindow()
+{
+    delete m_backupMemento;
+}
+
 QColor ShapesWindow::toColour(const QString &name)
 {
     const QColor colour(name.toLower());
