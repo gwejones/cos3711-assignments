@@ -1,6 +1,7 @@
 #include "ShapeList.h"
 
 #include "Shape.h"
+#include "ShapeListMemento.h"
 
 ShapeList &ShapeList::instance()
 {
@@ -103,4 +104,28 @@ void ShapeList::clear()
     }
     m_shapes.clear();
     m_currentIndex = -1;
+}
+
+ShapeListMemento ShapeList::createMemento() const
+{
+    ShapeListMemento memento;
+    memento.setCurrentIndex(m_currentIndex);
+    return memento;
+}
+
+void ShapeList::setMemento(const ShapeListMemento &memento)
+{
+    const int targetIndex = memento.getCurrentIndex();
+
+    if (m_shapes.isEmpty()) {
+        m_currentIndex = -1;
+        return;
+    }
+
+    if (targetIndex < 0 || targetIndex >= m_shapes.size()) {
+        m_currentIndex = 0;
+        return;
+    }
+
+    m_currentIndex = targetIndex;
 }

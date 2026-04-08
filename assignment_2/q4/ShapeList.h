@@ -3,6 +3,7 @@
 #include <QList>
 
 class Shape;
+class ShapeListMemento;
 
 /**
  * Singleton manager for the application's single list of Shape instances.
@@ -83,6 +84,16 @@ public:
      * Deletes all stored shapes and resets selection to an empty state.
      */
     void clear();
+
+    /**
+     * Creates a memento snapshot for this originator.
+     */
+    ShapeListMemento createMemento() const;
+
+    /**
+     * Restores originator state from a memento.
+     */
+    void setMemento(const ShapeListMemento &memento);
 
     ShapeList(const ShapeList &) = delete; // Prevents copy construction.
     ShapeList &operator=(const ShapeList &) = delete; // Prevents copy assignment.
