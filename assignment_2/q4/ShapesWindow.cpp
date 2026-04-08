@@ -170,7 +170,7 @@ QString ShapesWindow::resolveShapesXmlPath()
     return QDir(applicationDirPath).filePath("../data/shapes.xml");
 }
 
-void ShapesWindow::onShapeSelectionChanged(int index)
+void ShapesWindow::onShapeSelectionChanged()
 {
     updatePropertyState();
 }

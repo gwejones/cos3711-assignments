@@ -27,7 +27,7 @@ public:
     ~ShapesWindow() override;
 
 private slots:
-    void onShapeSelectionChanged(int index);
+    void onShapeSelectionChanged();
     void onCreateShapeClicked();
     void onBackupClicked();
     void onRestoreClicked();
