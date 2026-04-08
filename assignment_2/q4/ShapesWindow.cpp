@@ -29,7 +29,7 @@ constexpr int kMinPenWidth = 1;
 constexpr int kMaxPenWidth = 20;
 constexpr int kDefaultPenWidth = 3;
 constexpr int kWindowWidth = 300;
-constexpr int kWindowHeight = 420;
+constexpr int kWindowHeight = 460;
 }
 
 ShapesWindow::ShapesWindow(QWidget *parent)
@@ -68,6 +68,8 @@ ShapesWindow::ShapesWindow(QWidget *parent)
     m_fillColourComboBox->setCurrentText("Green");
 
     QPushButton *createShapeButton = new QPushButton("Create shape");
+    m_backupButton = new QPushButton("Backup");
+    m_restoreButton = new QPushButton("Restore");
     m_previousButton = new QPushButton("Previous");
     m_nextButton = new QPushButton("Next");
 
@@ -84,9 +86,13 @@ ShapesWindow::ShapesWindow(QWidget *parent)
     controlsLayout->addWidget(m_property2SpinBox, 1, 3);
     controlsLayout->addWidget(penColourLabel, 2, 0);
     controlsLayout->addWidget(m_penColourComboBox, 2, 1);
-    controlsLayout->addWidget(fillColourLabel, 3, 0);
-    controlsLayout->addWidget(m_fillColourComboBox, 3, 1);
-    controlsLayout->addWidget(createShapeButton, 2, 2, 2, 2);
+    controlsLayout->addWidget(fillColourLabel, 2, 2);
+    controlsLayout->addWidget(m_fillColourComboBox, 2, 3);
+
+    QHBoxLayout *actionsLayout = new QHBoxLayout();
+    actionsLayout->addWidget(createShapeButton, 1);
+    actionsLayout->addWidget(m_backupButton, 1);
+    actionsLayout->addWidget(m_restoreButton, 1);
 
     QHBoxLayout *navigationLayout = new QHBoxLayout();
     navigationLayout->addWidget(m_previousButton);
@@ -95,6 +101,7 @@ ShapesWindow::ShapesWindow(QWidget *parent)
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addLayout(controlsLayout);
+    mainLayout->addLayout(actionsLayout);
     mainLayout->addWidget(m_canvas);
     mainLayout->addLayout(navigationLayout);
     mainLayout->setContentsMargins(12, 12, 12, 12);
@@ -108,6 +115,14 @@ ShapesWindow::ShapesWindow(QWidget *parent)
             &QPushButton::clicked,
             this,
             &ShapesWindow::onCreateShapeClicked);
+    connect(m_backupButton,
+            &QPushButton::clicked,
+            this,
+            &ShapesWindow::onBackupClicked);
+    connect(m_restoreButton,
+            &QPushButton::clicked,
+            this,
+            &ShapesWindow::onRestoreClicked);
     connect(m_previousButton,
             &QPushButton::clicked,
             this,
@@ -162,6 +177,27 @@ void ShapesWindow::onShapeSelectionChanged(int index)
 void ShapesWindow::onCreateShapeClicked()
 {
     createShapeFromInput();
+    updateNavigationState();
+}
+
+void ShapesWindow::onBackupClicked()
+{
+    ShapeList &shapeList = ShapeList::instance();
+
+    delete m_backupMemento;
+    m_backupMemento = new ShapeListMemento(shapeList.createMemento());
+}
+
+void ShapesWindow::onRestoreClicked()
+{
+    if (m_backupMemento == nullptr) {
+        qWarning() << "No backup available to restore.";
+        return;
+    }
+
+    ShapeList &shapeList = ShapeList::instance();
+    shapeList.setMemento(*m_backupMemento);
+    displayCurrentShape();
     updateNavigationState();
 }
 

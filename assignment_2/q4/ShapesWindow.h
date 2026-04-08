@@ -29,6 +29,8 @@ public:
 private slots:
     void onShapeSelectionChanged(int index);
     void onCreateShapeClicked();
+    void onBackupClicked();
+    void onRestoreClicked();
     void onPreviousClicked();
     void onNextClicked();
 
@@ -49,6 +51,8 @@ private:
     QSpinBox *m_penWidthSpinBox = nullptr;
     QComboBox *m_penColourComboBox = nullptr;
     QComboBox *m_fillColourComboBox = nullptr;
+    QPushButton *m_backupButton = nullptr;
+    QPushButton *m_restoreButton = nullptr;
     QPushButton *m_previousButton = nullptr;
     QPushButton *m_nextButton = nullptr;
     DrawingCanvas *m_canvas = nullptr;
