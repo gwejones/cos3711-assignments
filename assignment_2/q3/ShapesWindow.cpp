@@ -133,6 +133,7 @@ QString ShapesWindow::resolveShapesXmlPath()
 {
     const QString applicationDirPath = QCoreApplication::applicationDirPath();
     const QStringList candidatePaths = {
+        QDir::current().filePath("shapes.xml"),
         QDir::current().filePath("data/shapes.xml"),
         QDir(applicationDirPath).filePath("data/shapes.xml"),
         QDir(applicationDirPath).filePath("../data/shapes.xml")
