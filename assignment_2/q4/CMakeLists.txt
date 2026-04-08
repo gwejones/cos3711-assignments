@@ -29,6 +29,8 @@ qt_add_executable(q4
     Rectangle.h
     ShapeList.cpp
     ShapeList.h
+    ShapeListMemento.cpp
+    ShapeListMemento.h
     ShapeFactory.cpp
     ShapeFactory.h
     ShapeXmlSerializer.cpp
