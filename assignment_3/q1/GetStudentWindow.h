@@ -14,6 +14,7 @@ public:
 private:
     void onAddButtonClicked();
     bool validateInput(QString &errorMessage, QLineEdit *&errorField) const;
+    void resetFormAfterSuccess();
 
     QLineEdit *m_studentNumberLineEdit = nullptr;
     QLineEdit *m_moduleCodeLineEdit = nullptr;

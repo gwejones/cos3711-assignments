@@ -59,6 +59,8 @@ GetStudentWindow::GetStudentWindow(QWidget *parent)
             this,
             &GetStudentWindow::onAddButtonClicked);
 
+    m_studentNumberLineEdit->setFocus();
+
     resize(kWindowWidth, kWindowHeight);
 }
 
@@ -77,6 +79,8 @@ void GetStudentWindow::onAddButtonClicked()
         output << studentNumber << "|" << moduleCode << "|" << mark << "\n";
         // Flush so that the process for Q2 can read immediately.
         output.flush();
+
+        resetFormAfterSuccess();
         return;
     }
 
@@ -125,4 +129,12 @@ bool GetStudentWindow::validateInput(QString &errorMessage, QLineEdit *&errorFie
     }
 
     return true;
+}
+
+void GetStudentWindow::resetFormAfterSuccess()
+{
+    m_studentNumberLineEdit->clear();
+    m_moduleCodeLineEdit->clear();
+    m_markLineEdit->clear();
+    m_studentNumberLineEdit->setFocus();
 }
