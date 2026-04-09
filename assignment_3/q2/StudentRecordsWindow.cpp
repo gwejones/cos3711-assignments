@@ -55,6 +55,18 @@ StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
             &QProcess::readyReadStandardOutput,
             this,
             &StudentRecordsWindow::onGetStudentReadyReadStandardOutput);
+    connect(m_getStudentProcess,
+            &QProcess::readyReadStandardError,
+            this,
+            &StudentRecordsWindow::onGetStudentReadyReadStandardError);
+    connect(m_getStudentProcess,
+            &QProcess::errorOccurred,
+            this,
+            &StudentRecordsWindow::onGetStudentProcessErrorOccurred);
+    connect(m_getStudentProcess,
+            static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            this,
+            &StudentRecordsWindow::onGetStudentProcessFinished);
 
     resize(kWindowWidth, kWindowHeight);
 }
@@ -71,6 +83,7 @@ void StudentRecordsWindow::onLaunchGetStudentClicked()
         return;
     }
 
+    m_standardOutputBuffer.clear();
     m_getStudentProcess->setProgram(executablePath);
     m_getStudentProcess->start();
 }
@@ -96,6 +109,28 @@ void StudentRecordsWindow::onGetStudentReadyReadStandardOutput()
     }
 }
 
+void StudentRecordsWindow::onGetStudentReadyReadStandardError()
+{
+    const QByteArray errorChunk = m_getStudentProcess->readAllStandardError();
+    if (errorChunk.isEmpty()) {
+        return;
+    }
+
+    qWarning() << "q1 stderr:" << QString::fromUtf8(errorChunk).trimmed();
+}
+
+void StudentRecordsWindow::onGetStudentProcessErrorOccurred(QProcess::ProcessError processError)
+{
+    qWarning() << "q1 process error:" << m_getStudentProcess->errorString();
+    m_standardOutputBuffer.clear();
+}
+
+void StudentRecordsWindow::onGetStudentProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    // Clear any partial data so it is not mixed into output from the next q1 launch.
+    m_standardOutputBuffer.clear();
+}
+
 void StudentRecordsWindow::applyRecordFromOutputLine(const QString &line)
 {
     if (line.isEmpty()) {
@@ -111,6 +146,10 @@ void StudentRecordsWindow::applyRecordFromOutputLine(const QString &line)
     const QString studentNumber = parts[0].trimmed();
     const QString moduleCode = parts[1].trimmed();
     const QString markText = parts[2].trimmed();
+    if (studentNumber.isEmpty() || moduleCode.isEmpty()) {
+        qWarning() << "Ignoring q1 output record with empty fields:" << line;
+        return;
+    }
 
     bool isMarkNumber = false;
     const int mark = markText.toInt(&isMarkNumber);

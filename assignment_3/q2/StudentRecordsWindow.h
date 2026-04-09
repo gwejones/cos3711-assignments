@@ -1,9 +1,9 @@
 #pragma once
 
+#include <QProcess>
 #include <QWidget>
 
 class QLineEdit;
-class QProcess;
 class QPushButton;
 class QString;
 
@@ -15,6 +15,9 @@ public:
 private:
     void onLaunchGetStudentClicked();
     void onGetStudentReadyReadStandardOutput();
+    void onGetStudentReadyReadStandardError();
+    void onGetStudentProcessErrorOccurred(QProcess::ProcessError processError);
+    void onGetStudentProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void applyRecordFromOutputLine(const QString &line);
     /**
      * Resolve the path to the Question 1 executable at runtime.
