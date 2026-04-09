@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QString>
+#include <QTextStream>
 #include <QVBoxLayout>
 
 static constexpr int kWindowWidth = 420;
@@ -68,7 +69,14 @@ void GetStudentWindow::onAddButtonClicked()
 
     const bool isValid = validateInput(errorMessage, errorField);
     if (isValid) {
-        // Handle later
+        const QString studentNumber = m_studentNumberLineEdit->text();
+        const QString moduleCode = m_moduleCodeLineEdit->text();
+        const int mark = m_markLineEdit->text().toInt();
+
+        QTextStream output(stdout);
+        output << studentNumber << "|" << moduleCode << "|" << mark << "\n";
+        // Flush so that the process for Q2 can read immediately.
+        output.flush();
         return;
     }
 
