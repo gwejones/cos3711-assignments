@@ -4,6 +4,7 @@
 
 class QLineEdit;
 class QPushButton;
+class QString;
 
 class GetStudentWindow : public QWidget
 {
@@ -11,6 +12,9 @@ public:
     explicit GetStudentWindow(QWidget *parent = nullptr);
 
 private:
+    void onAddButtonClicked();
+    bool validateInput(QString &errorMessage, QLineEdit *&errorField) const;
+
     QLineEdit *m_studentNumberLineEdit = nullptr;
     QLineEdit *m_moduleCodeLineEdit = nullptr;
     QLineEdit *m_markLineEdit = nullptr;
