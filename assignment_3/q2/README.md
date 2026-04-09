@@ -7,21 +7,28 @@ separate process. When the user clicks the add button in this second process, th
 be displayed on the GUI.
 
 Hints:
-- Have a look at the `QProcess` class documentation, specifically at the
-  `readyReadStandardOutput()` signal.
+- Have a look at the `QProcess` class documentation, specifically at the `readyReadStandardOutput()` signal.
 - You will need to read this output, and display it in the window.
 - Remember to move the executable from Question 1's build folder to Question 2's build folder.
 
 ## Build and Run
 This project uses CMake and Qt6 (Widgets).
 
-Build:
+Build both questions:
 
 ```bash
+# Build q1 first (GetStudent producer)
+# From assignment_3/q1
+cmake -S . -B build
+cmake --build build
+
+# Build q2
 # From assignment_3/q2
 cmake -S . -B build
 cmake --build build
 ```
+
+Question 2 starts Question 1 as a separate process. Before running `q2`, ensure the `q1` executable is available in q2's runtime folder.
 
 Run the executable:
 
