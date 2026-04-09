@@ -1,11 +1,12 @@
 #include <QApplication>
-#include <QWidget>
+
+#include "GetStudentWindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QWidget window;
+    GetStudentWindow window;
     window.show();
 
     return app.exec();
