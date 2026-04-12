@@ -1,5 +1,8 @@
 #include "StudentRecordsWindow.h"
 
+#include "Student.h"
+#include "StudentList.h"
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
@@ -157,6 +160,24 @@ void StudentRecordsWindow::applyRecordFromOutputLine(const QString &line)
         qWarning() << "Ignoring q1 output record with non-numeric mark:" << line;
         return;
     }
+
+    StudentList &studentList = StudentList::instance();
+    const int studentIndex = studentList.indexOfStudentNumber(studentNumber);
+
+    Student *student = nullptr;
+    if (studentIndex < 0) {
+        student = new Student();
+        student->setNumber(studentNumber);
+        studentList.addStudent(student);
+    } else {
+        student = studentList.getStudent(studentIndex);
+        if (student == nullptr) {
+            qWarning() << "Student list returnd null pointer for existing index:" << studentIndex;
+            return;
+        }
+    }
+
+    student->addModule(moduleCode, mark);
 
     m_studentNumberLineEdit->setText(studentNumber);
     m_moduleCodeLineEdit->setText(moduleCode);
