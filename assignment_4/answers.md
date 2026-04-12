@@ -72,14 +72,14 @@ What was wrong with the given class definition:
 
 I would **not** agree with making `RainXml` a singleton in this case.
 
-A singleton is justfied when:
+A singleton is justified when:
 
 * There must be exactly one instance
-* The instance represents a share touchpoint for co-ordination or state
+* The instance represents a shared touchpoint for coordination or state
 * Multiple instances would cause incorrect behaviour.
 * Global access is needed
 
-None of these requirements apply to `RainXml`, since it is just a simple serializer. Since it is lightweight, there is no reason why multiple instances cannot be created. Calls to its methods do not require co-ordination with other classes or access to shared state. Having multiple instances does not cause incorrect behaviour. Global access is not needed, since only the client class needs to use it.
+None of these requirements apply to `RainXml`, since it is just a simple serializer. Since it is lightweight, there is no reason why multiple instances cannot be created. Calls to its methods do not require coordination with other classes or access to shared state. Having multiple instances does not cause incorrect behaviour. Global access is not needed, since only the client class needs to use it.
 
 ## 2.3.1
 
@@ -215,9 +215,9 @@ This assumes that `StationThread::doSearch()` emits `finished()` when processing
 
 ## 3.3
 
-Its not the best approach.
+It is not the best approach.
 
-`QTableWidget` is acceptable for a small, simple table because it convenient, but it is item-based and tightly couples domain data storage to the UI widget. For this scenario, a model/view approach with `QTableView` and seperate domain model class is better because it scales more cleanly, separates data from presentation, and is easier to update/refresh when thread results arrive. With `QTableView` and a model, thread results can be appended to model data, and the view refresh is handled through model notifications. That gives cleaner, safer update flow.
+`QTableWidget` is acceptable for a small, simple table because it is convenient, but it is item-based and tightly couples domain data storage to the UI widget. For this scenario, a model/view approach with `QTableView` and a separate domain model class is better because it scales more cleanly, separates data from presentation, and is easier to update/refresh when thread results arrive. With `QTableView` and a model, thread results can be appended to model data, and the view refresh is handled through model notifications. That gives cleaner, safer update flow.
 
 ## 3.4.1
 
@@ -236,8 +236,8 @@ In this scenario:
 It is not correct. The problematic areas are:
 
 - `friend class MyTableWidgetMemento` is the wrong direction for classic Memento encapsulation. We need the Originator (`MyTableWidget`) to access private state inside the Memento, not for the Memento class to access the Originator’s private members.
-- `createMemento()` and `setMemento(...)` are private, so the Caretaker (`Client`) cannot call them to save/restore. It should be the `getState()` and `setState()` methods of the Momento that are private.
-- The constructor of the Originator is private, which makes normal widget creation impossible. It should be the constructor of the Momento (`MyTableWidgetMemento`) that is private so that the Caretaker cannot access the state of the Originator.
+- `createMemento()` and `setMemento(...)` are private, so the Caretaker (`Client`) cannot call them to save/restore. It should be the `getState()` and `setState()` methods of the Memento that are private.
+- The constructor of the Originator is private, which makes normal widget creation impossible. It should be the constructor of the Memento (`MyTableWidgetMemento`) that is private so that the Caretaker cannot access the state of the Originator.
 
 ## 3.5
 
