@@ -3,6 +3,7 @@
 #include <QProcess>
 #include <QWidget>
 
+class Student;
 class QLineEdit;
 class QPushButton;
 class QString;
@@ -13,12 +14,17 @@ public:
     explicit StudentRecordsWindow(QWidget *parent = nullptr);
 
 private:
+    Student *findStudentFromLookupInput(QString &lookupNumber) const;
+
     void onLaunchGetStudentClicked();
     void onGetStudentReadyReadStandardOutput();
     void onGetStudentReadyReadStandardError();
     void onGetStudentProcessErrorOccurred(QProcess::ProcessError processError);
     void onGetStudentProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void applyRecordFromOutputLine(const QString &line);
+    void onDisplayStudentRecordClicked();
+    void onShowAverageClicked();
+    void onCheckGraduationClicked();
     /**
      * Resolve the path to the Question 1 executable at runtime.
      * This is needed because q2 can be launched from different build layouts.
@@ -31,6 +37,13 @@ private:
     QLineEdit *m_studentNumberLineEdit = nullptr;
     QLineEdit *m_moduleCodeLineEdit = nullptr;
     QLineEdit *m_markLineEdit = nullptr;
+    QLineEdit *m_lookupStudentNumberLineEdit = nullptr;
+    QLineEdit *m_studentRecordLineEdit = nullptr;
+    QLineEdit *m_averageLineEdit = nullptr;
+    QLineEdit *m_graduationStatusLineEdit = nullptr;
+    QPushButton *m_displayStudentRecordButton = nullptr;
+    QPushButton *m_showAverageButton = nullptr;
+    QPushButton *m_checkGraduationButton = nullptr;
     QProcess *m_getStudentProcess = nullptr;
     QString m_standardOutputBuffer;
 };

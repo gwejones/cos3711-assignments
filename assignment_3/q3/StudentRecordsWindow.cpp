@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QFormLayout>
+#include <QHBoxLayout>
 #include <QLoggingCategory>
 #include <QByteArray>
 #include <QLineEdit>
@@ -17,7 +18,7 @@
 #include <QVBoxLayout>
 
 static constexpr int kWindowWidth = 420;
-static constexpr int kWindowHeight = 200;
+static constexpr int kWindowHeight = 340;
 static constexpr const char *kGetStudentExecutableName = "q1";
 
 StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
@@ -26,26 +27,53 @@ StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
     setWindowTitle("Question 3");
 
     m_launchGetStudentButton = new QPushButton("Launch GetStudent");
+    m_displayStudentRecordButton = new QPushButton("Display Student Record");
+    m_showAverageButton = new QPushButton("Show Average");
+    m_checkGraduationButton = new QPushButton("Check Graduation");
     m_studentNumberLineEdit = new QLineEdit();
     m_moduleCodeLineEdit = new QLineEdit();
     m_markLineEdit = new QLineEdit();
+    m_lookupStudentNumberLineEdit = new QLineEdit();
+    m_studentRecordLineEdit = new QLineEdit();
+    m_averageLineEdit = new QLineEdit();
+    m_graduationStatusLineEdit = new QLineEdit();
     m_getStudentProcess = new QProcess(this);
 
     m_studentNumberLineEdit->setReadOnly(true);
     m_moduleCodeLineEdit->setReadOnly(true);
     m_markLineEdit->setReadOnly(true);
+    m_studentRecordLineEdit->setReadOnly(true);
+    m_averageLineEdit->setReadOnly(true);
+    m_graduationStatusLineEdit->setReadOnly(true);
 
-    m_studentNumberLineEdit->setPlaceholderText("Student number");
-    m_moduleCodeLineEdit->setPlaceholderText("Module code");
-    m_markLineEdit->setPlaceholderText("Mark");
+    m_studentNumberLineEdit->setPlaceholderText("Latest student number");
+    m_moduleCodeLineEdit->setPlaceholderText("Latest module code");
+    m_markLineEdit->setPlaceholderText("Latest mark");
+    m_lookupStudentNumberLineEdit->setPlaceholderText("Enter student number");
+    m_studentRecordLineEdit->setPlaceholderText("Student modules and marks");
+    m_averageLineEdit->setPlaceholderText("Average mark");
+    m_graduationStatusLineEdit->setPlaceholderText("Graduation status");
 
-    QFormLayout *displayLayout = new QFormLayout();
-    displayLayout->addRow("Student Number", m_studentNumberLineEdit);
-    displayLayout->addRow("Module Code", m_moduleCodeLineEdit);
-    displayLayout->addRow("Mark", m_markLineEdit);
+    QFormLayout *latestRecordLayout = new QFormLayout();
+    latestRecordLayout->addRow("Latest Student Number", m_studentNumberLineEdit);
+    latestRecordLayout->addRow("Latest Module Code", m_moduleCodeLineEdit);
+    latestRecordLayout->addRow("Latest Mark", m_markLineEdit);
+
+    QHBoxLayout *queryActionsLayout = new QHBoxLayout();
+    queryActionsLayout->addWidget(m_displayStudentRecordButton);
+    queryActionsLayout->addWidget(m_showAverageButton);
+    queryActionsLayout->addWidget(m_checkGraduationButton);
+
+    QFormLayout *queryResultsLayout = new QFormLayout();
+    queryResultsLayout->addRow("Lookup Student Number", m_lookupStudentNumberLineEdit);
+    queryResultsLayout->addRow(queryActionsLayout);
+    queryResultsLayout->addRow("Student Record", m_studentRecordLineEdit);
+    queryResultsLayout->addRow("Average", m_averageLineEdit);
+    queryResultsLayout->addRow("Graduation", m_graduationStatusLineEdit);
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->addLayout(displayLayout);
+    mainLayout->addLayout(queryResultsLayout);
+    mainLayout->addLayout(latestRecordLayout);
     mainLayout->addWidget(m_launchGetStudentButton);
     mainLayout->setContentsMargins(12, 12, 12, 12);
     mainLayout->setSpacing(10);
@@ -70,6 +98,18 @@ StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
             static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
             this,
             &StudentRecordsWindow::onGetStudentProcessFinished);
+    connect(m_displayStudentRecordButton,
+            &QPushButton::clicked,
+            this,
+            &StudentRecordsWindow::onDisplayStudentRecordClicked);
+    connect(m_showAverageButton,
+            &QPushButton::clicked,
+            this,
+            &StudentRecordsWindow::onShowAverageClicked);
+    connect(m_checkGraduationButton,
+            &QPushButton::clicked,
+            this,
+            &StudentRecordsWindow::onCheckGraduationClicked);
 
     resize(kWindowWidth, kWindowHeight);
 }
@@ -132,6 +172,80 @@ void StudentRecordsWindow::onGetStudentProcessFinished(int exitCode, QProcess::E
 {
     // Clear any partial data so it is not mixed into output from the next q1 launch.
     m_standardOutputBuffer.clear();
+}
+
+Student *StudentRecordsWindow::findStudentFromLookupInput(QString &lookupNumber) const
+{
+    lookupNumber = m_lookupStudentNumberLineEdit->text().trimmed();
+    if (lookupNumber.isEmpty()) {
+        qWarning() << "Lookup student number is empty.";
+        return nullptr;
+    }
+
+    StudentList &studentList = StudentList::instance();
+    const int studentIndex = studentList.indexOfStudentNumber(lookupNumber);
+    if (studentIndex < 0) {
+        qWarning() << "Could not find student number:" << lookupNumber;
+        return nullptr;
+    }
+
+    Student *student = studentList.getStudent(studentIndex);
+    if (student == nullptr) {
+        qWarning() << "Student list returned null pointer for existing index:" << studentIndex;
+        return nullptr;
+    }
+
+    return student;
+}
+
+void StudentRecordsWindow::onDisplayStudentRecordClicked()
+{
+    QString lookupNumber;
+    Student *student = findStudentFromLookupInput(lookupNumber);
+    if (student == nullptr) {
+        m_studentRecordLineEdit->clear();
+        return;
+    }
+
+    const Student::ModulesContainer &modules = student->getModules();
+    if (modules.isEmpty()) {
+        m_studentRecordLineEdit->setText("No modules.");
+        return;
+    }
+
+    QStringList recordParts;
+    for (Student::ModulesContainer::const_iterator it = modules.cbegin();
+         it != modules.cend();
+         ++it) {
+        recordParts.append(it.key() + ":" + QString::number(it.value()));
+    }
+
+    m_studentRecordLineEdit->setText(recordParts.join(", "));
+}
+
+void StudentRecordsWindow::onShowAverageClicked()
+{
+    QString lookupNumber;
+    Student *student = findStudentFromLookupInput(lookupNumber);
+    if (student == nullptr) {
+        m_averageLineEdit->clear();
+        return;
+    }
+
+    m_averageLineEdit->setText(QString::number(student->average(), 'f', 2));
+}
+
+void StudentRecordsWindow::onCheckGraduationClicked()
+{
+    QString lookupNumber;
+    Student *student = findStudentFromLookupInput(lookupNumber);
+    if (student == nullptr) {
+        m_graduationStatusLineEdit->clear();
+        return;
+    }
+
+    const bool qualifies = student->graduate();
+    m_graduationStatusLineEdit->setText(qualifies ? "Qualifies" : "Does not qualify");
 }
 
 void StudentRecordsWindow::applyRecordFromOutputLine(const QString &line)
