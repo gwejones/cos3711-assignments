@@ -64,6 +64,19 @@ bool StudentListXmlSerializer::saveToFile(const QString &filePath,
         appendStudentElement(document, rootElement, *student);
     }
 
+    QFile xmlFile(filePath);
+    if (!xmlFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "Could not open student list XML file for writing:" << filePath;
+        return false;
+    }
+
+    const QByteArray xmlBytes = document.toByteArray(2);
+    const qint64 bytesWritten = xmlFile.write(xmlBytes);
+    if (bytesWritten != xmlBytes.size()) {
+        qWarning() << "Could not write student list XML file:" << filePath;
+        return false;
+    }
+
     return true;
 }
 
