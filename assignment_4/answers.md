@@ -47,6 +47,27 @@ QString dateStr = date.toString("yyyy/MM/dd");
 
 ## 2.2.1
 
+```cpp
+class RainXml
+{
+public:
+    static RainXml& getInstance();
+    QString writeToXml(/*passing rain data*/);
+
+private:
+    RainXml();
+    static RainXml* instance;
+    bool checkStationCode(QString stn) const;
+    QRegularExpression re;
+};
+```
+
+What was wrong with the given class definition:
+- `getInstance()` was not `static`, so you would already need an object before you could call it.
+- `getInstance()` returned by value, which allows copies instead of one shared instance.
+- `RainXml instance;` was a non-static data member which makes the class contain itself.
+- The constructor was public, so multiple instances could still be created directly.
+
 ## 2.2.2
 
 ## 2.3.1
