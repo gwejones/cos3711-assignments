@@ -249,6 +249,6 @@ For scale, cloud platforms are designed for elastic resource allocation. So they
 
 # References
 
-1. [1] https://en.wikipedia.org/wiki/Cloud_computing
-2. [2] https://azure.microsoft.com/en-us/overview/what-is-cloud-computing/
-3. [3] https://www.ibm.com/cloud/learn/cloud-computing
+- [1] https://en.wikipedia.org/wiki/Cloud_computing
+- [2] https://azure.microsoft.com/en-us/overview/what-is-cloud-computing/
+- [3] https://www.ibm.com/cloud/learn/cloud-computing
