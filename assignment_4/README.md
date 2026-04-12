@@ -275,5 +275,6 @@ pandoc answers.md \
   --standalone \
   -V papersize:a4 \
   -V geometry:margin=15mm \
+  -M date="$(date +%Y-%m-%d)" \
   -o ./50052578_COS3711_Assign_4.pdf
 ```

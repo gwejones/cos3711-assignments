@@ -1,7 +1,7 @@
 ---
 title: "COS3711 Assignment 4"
 author: "50052578 Jones GWE"
-date: "2026-04-12"
+date: "<set at build time>"
 ---
 
 # Question 1
