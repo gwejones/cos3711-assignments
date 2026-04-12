@@ -16,7 +16,7 @@ public:
     explicit StudentRecordsWindow(QWidget *parent = nullptr);
 
 private:
-    Student *findStudentFromLookupInput(QString &lookupNumber) const;
+    Student *findStudentFromLookupInput(QString &lookupNumber);
 
     void onLaunchGetStudentClicked();
     void onGetStudentReadyReadStandardOutput();

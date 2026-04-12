@@ -13,8 +13,10 @@
 #include <QLoggingCategory>
 #include <QByteArray>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QProcess>
 #include <QPushButton>
+#include <QRegularExpression>
 #include <QStandardItem>
 #include <QStandardItemModel>
 #include <QTableView>
@@ -24,7 +26,10 @@
 
 static constexpr int kWindowWidth = 420;
 static constexpr int kWindowHeight = 420;
+static constexpr int kStudentNumberLength = 4;
 static constexpr const char *kGetStudentExecutableName = "q1";
+static constexpr const char *kStudentNumberMask = "0000";
+static constexpr const char *kStudentNumberPattern = "^\\d{4}$";
 
 StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
     : QWidget(parent)
@@ -54,6 +59,8 @@ StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
     m_studentNumberLineEdit->setPlaceholderText("Latest student number");
     m_moduleCodeLineEdit->setPlaceholderText("Latest module code");
     m_markLineEdit->setPlaceholderText("Latest mark");
+    m_lookupStudentNumberLineEdit->setInputMask(kStudentNumberMask);
+    m_lookupStudentNumberLineEdit->setMaxLength(kStudentNumberLength);
     m_lookupStudentNumberLineEdit->setPlaceholderText("Enter student number");
     m_averageLineEdit->setPlaceholderText("Average mark");
     m_graduationStatusLineEdit->setPlaceholderText("Graduation status");
@@ -187,18 +194,28 @@ void StudentRecordsWindow::onGetStudentProcessFinished(int exitCode, QProcess::E
     m_standardOutputBuffer.clear();
 }
 
-Student *StudentRecordsWindow::findStudentFromLookupInput(QString &lookupNumber) const
+Student *StudentRecordsWindow::findStudentFromLookupInput(QString &lookupNumber)
 {
-    lookupNumber = m_lookupStudentNumberLineEdit->text().trimmed();
-    if (lookupNumber.isEmpty()) {
-        qWarning() << "Lookup student number is empty.";
+    lookupNumber = m_lookupStudentNumberLineEdit->text();
+    const QRegularExpression studentNumberRegex(kStudentNumberPattern);
+    const QRegularExpressionMatch studentNumberMatch = studentNumberRegex.match(lookupNumber);
+    if (!studentNumberMatch.hasMatch()) {
+        QMessageBox::warning(this,
+                             "Invalid Input",
+                             "Student number must be exactly 4 digits.");
+        m_lookupStudentNumberLineEdit->setFocus();
+        m_lookupStudentNumberLineEdit->selectAll();
         return nullptr;
     }
 
     StudentList &studentList = StudentList::instance();
     const int studentIndex = studentList.indexOfStudentNumber(lookupNumber);
     if (studentIndex < 0) {
-        qWarning() << "Could not find student number:" << lookupNumber;
+        QMessageBox::warning(this,
+                             "Student Not Found",
+                             QString("Could not find student number: %1").arg(lookupNumber));
+        m_lookupStudentNumberLineEdit->setFocus();
+        m_lookupStudentNumberLineEdit->selectAll();
         return nullptr;
     }
 
