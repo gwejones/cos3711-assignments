@@ -6,10 +6,16 @@
 
 #include <QDomDocument>
 #include <QDomElement>
+#include <QMetaObject>
 #include <QDomNode>
 #include <QDebug>
 #include <QFile>
 #include <QIODevice>
+#include <QVariant>
+
+static constexpr const char *kStudentNumberPropertyName = "number";
+static constexpr const char *kStudentModulesPropertyName = "modules";
+static constexpr const char *kStudentListStudentsPropertyName = "students";
 
 void StudentListXmlSerializer::deleteStudents(QList<Student *> &students) const
 {
@@ -88,8 +94,15 @@ bool StudentListXmlSerializer::parseStudentElement(const QDomElement &studentEle
         return false;
     }
 
-    Student *parsedStudent = new Student();
-    parsedStudent->setNumber(studentNumber);
+    QObject *studentObject = Student::staticMetaObject.newInstance();
+    Student *parsedStudent = qobject_cast<Student *>(studentObject);
+    if (parsedStudent == nullptr) {
+        delete studentObject;
+        qWarning() << "Could not instantiate Student via meta-object reflection.";
+        return false;
+    }
+
+    Student::ModulesContainer modules;
 
     QDomNode moduleNode = modulesElement.firstChild();
     while (!moduleNode.isNull()) {
@@ -104,10 +117,27 @@ bool StudentListXmlSerializer::parseStudentElement(const QDomElement &studentEle
                 return false;
             }
 
-            parsedStudent->addModule(moduleCode, mark);
+            modules[moduleCode] = mark;
         }
 
         moduleNode = moduleNode.nextSibling();
+    }
+
+    const bool isNumberAssigned = parsedStudent->setProperty(kStudentNumberPropertyName,
+                                                             studentNumber);
+    if (!isNumberAssigned) {
+        qWarning() << "Could not assign Student::number through reflection.";
+        delete parsedStudent;
+        return false;
+    }
+
+    const QVariant modulesVariant = QVariant::fromValue(modules);
+    const bool isModulesAssigned = parsedStudent->setProperty(kStudentModulesPropertyName,
+                                                              modulesVariant);
+    if (!isModulesAssigned) {
+        qWarning() << "Could not assign Student::modules through reflection.";
+        delete parsedStudent;
+        return false;
     }
 
     student = parsedStudent;
@@ -187,7 +217,15 @@ bool StudentListXmlSerializer::saveToFile(const QString &filePath,
     QDomElement rootElement = document.createElement(StudentListXmlSchema::kRootElement);
     document.appendChild(rootElement);
 
-    const StudentList::StudentsContainer &students = studentList.getStudents();
+    StudentList::StudentsContainer students;
+    const QVariant studentsVariant = studentList.property(kStudentListStudentsPropertyName);
+    if (studentsVariant.canConvert<StudentList::StudentsContainer>()) {
+        students = studentsVariant.value<StudentList::StudentsContainer>();
+    } else {
+        qWarning() << "Could not read StudentList::students through reflection.";
+        students = studentList.getStudents();
+    }
+
     for (int index = 0; index < students.size(); ++index) {
         const Student *student = students.at(index);
         if (student == nullptr) {
@@ -216,17 +254,32 @@ void StudentListXmlSerializer::appendStudentElement(QDomDocument &document,
                                                     QDomElement &rootElement,
                                                     const Student &student) const
 {
+    const QVariant studentNumberVariant = student.property(kStudentNumberPropertyName);
+    if (!studentNumberVariant.isValid()) {
+        qWarning() << "Could not read Student::number through reflection.";
+        return;
+    }
+
+    const QString studentNumber = studentNumberVariant.toString();
+
+    const QVariant modulesVariant = student.property(kStudentModulesPropertyName);
+    if (!modulesVariant.canConvert<Student::ModulesContainer>()) {
+        qWarning() << "Could not read Student::modules through reflection.";
+        return;
+    }
+
+    const Student::ModulesContainer modules = modulesVariant.value<Student::ModulesContainer>();
+
     QDomElement studentElement = document.createElement(StudentListXmlSchema::kStudentElement);
     rootElement.appendChild(studentElement);
 
     QDomElement numberElement = document.createElement(StudentListXmlSchema::kNumberElement);
-    numberElement.appendChild(document.createTextNode(student.getNumber()));
+    numberElement.appendChild(document.createTextNode(studentNumber));
     studentElement.appendChild(numberElement);
 
     QDomElement modulesElement = document.createElement(StudentListXmlSchema::kModulesElement);
     studentElement.appendChild(modulesElement);
 
-    const Student::ModulesContainer &modules = student.getModules();
     for (Student::ModulesContainer::const_iterator it = modules.cbegin();
          it != modules.cend();
          ++it) {
