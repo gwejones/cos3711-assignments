@@ -70,6 +70,17 @@ What was wrong with the given class definition:
 
 ## 2.2.2
 
+I would **not** agree with making `RainXml` a singleton in this case.
+
+A singleton is justfied when:
+
+* There must be exactly one instance
+* The instance represents a share touchpoint for co-ordination or state
+* Multiple instances would cause incorrect behaviour.
+* Global access is needed
+
+None of these requirements apply to `RainXml`, since it is just a simple serializer. Since it is lightweight, there is no reason why multiple instances cannot be created. Calls to its methods do not require co-ordination with other classes or access to shared state. Having multiple instances does not cause incorrect behaviour. Global access is not needed, since only the client class needs to use it.
+
 ## 2.3.1
 
 ## 2.3.2
