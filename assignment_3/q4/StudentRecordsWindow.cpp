@@ -5,6 +5,7 @@
 #include "StudentListXmlSchema.h"
 
 #include <QAbstractItemView>
+#include <QCloseEvent>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
@@ -132,7 +133,34 @@ StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
             this,
             &StudentRecordsWindow::onCheckGraduationClicked);
 
+    loadStudentListFromXml();
     resize(kWindowWidth, kWindowHeight);
+}
+
+void StudentRecordsWindow::closeEvent(QCloseEvent *event)
+{
+    saveStudentListToXml();
+    QWidget::closeEvent(event);
+}
+
+void StudentRecordsWindow::loadStudentListFromXml()
+{
+    const QString xmlPath = resolveStudentListXmlPath();
+    StudentList &studentList = StudentList::instance();
+    const bool loaded = m_studentListXmlSerializer.loadFromFile(xmlPath, studentList);
+    if (!loaded) {
+        qWarning() << "Failed to load StudentList from XML:" << xmlPath;
+    }
+}
+
+void StudentRecordsWindow::saveStudentListToXml() const
+{
+    const QString xmlPath = resolveStudentListXmlPath();
+    const StudentList &studentList = StudentList::instance();
+    const bool saved = m_studentListXmlSerializer.saveToFile(xmlPath, studentList);
+    if (!saved) {
+        qWarning() << "Failed to save StudentList to XML:" << xmlPath;
+    }
 }
 
 void StudentRecordsWindow::onLaunchGetStudentClicked()

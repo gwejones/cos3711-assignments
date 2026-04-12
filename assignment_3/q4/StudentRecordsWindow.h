@@ -1,9 +1,12 @@
 #pragma once
 
+#include "StudentListXmlSerializer.h"
+
 #include <QProcess>
 #include <QWidget>
 
 class Student;
+class QCloseEvent;
 class QLineEdit;
 class QPushButton;
 class QString;
@@ -15,9 +18,13 @@ class StudentRecordsWindow : public QWidget
 public:
     explicit StudentRecordsWindow(QWidget *parent = nullptr);
 
-private:
-    Student *findStudentFromLookupInput(QString &lookupNumber);
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
+private:
+    void loadStudentListFromXml();
+    void saveStudentListToXml() const;
+    Student *findStudentFromLookupInput(QString &lookupNumber);
     void onLaunchGetStudentClicked();
     void onGetStudentReadyReadStandardOutput();
     void onGetStudentReadyReadStandardError();
@@ -51,4 +58,5 @@ private:
     QStandardItemModel *m_studentRecordTableModel = nullptr;
     QProcess *m_getStudentProcess = nullptr;
     QString m_standardOutputBuffer;
+    StudentListXmlSerializer m_studentListXmlSerializer;
 };
