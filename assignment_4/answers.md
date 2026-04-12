@@ -98,6 +98,10 @@ Explanation:
 
 ## 2.3.2
 
+The anti-pattern is **Input kludge**.
+
+If station codes are not validated at input time, invalid values enter the workflow and later code tends to add ad-hoc fixes/special cases to cope with bad data.
+
 ## 2.3.3
 
 ## 2.4
