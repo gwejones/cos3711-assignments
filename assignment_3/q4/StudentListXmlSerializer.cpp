@@ -218,21 +218,23 @@ bool StudentListXmlSerializer::saveToFile(const QString &filePath,
     QDomElement rootElement = document.createElement(StudentListXmlSchema::kRootElement);
     document.appendChild(rootElement);
 
-    StudentList::StudentsContainer students;
     const QVariant studentsVariant = studentList.property(kStudentListStudentsPropertyName);
-    if (studentsVariant.canConvert<StudentList::StudentsContainer>()) {
-        students = studentsVariant.value<StudentList::StudentsContainer>();
-    } else {
+    if (!studentsVariant.canConvert<StudentList::StudentsContainer>()) {
         qWarning() << "Could not read StudentList::students through reflection.";
-        students = studentList.getStudents();
+        return false;
     }
+
+    const StudentList::StudentsContainer students = studentsVariant.value<StudentList::StudentsContainer>();
 
     for (int index = 0; index < students.size(); ++index) {
         const Student *student = students.at(index);
         if (student == nullptr) {
             continue;
         }
-        appendStudentElement(document, rootElement, *student);
+        const bool appended = appendStudentElement(document, rootElement, *student);
+        if (!appended) {
+            return false;
+        }
     }
 
     QFile xmlFile(filePath);
@@ -251,14 +253,14 @@ bool StudentListXmlSerializer::saveToFile(const QString &filePath,
     return true;
 }
 
-void StudentListXmlSerializer::appendStudentElement(QDomDocument &document,
+bool StudentListXmlSerializer::appendStudentElement(QDomDocument &document,
                                                     QDomElement &rootElement,
                                                     const Student &student) const
 {
     const QVariant studentNumberVariant = student.property(kStudentNumberPropertyName);
     if (!studentNumberVariant.isValid()) {
         qWarning() << "Could not read Student::number through reflection.";
-        return;
+        return false;
     }
 
     const QString studentNumber = studentNumberVariant.toString();
@@ -266,7 +268,7 @@ void StudentListXmlSerializer::appendStudentElement(QDomDocument &document,
     const QVariant modulesVariant = student.property(kStudentModulesPropertyName);
     if (!modulesVariant.canConvert<Student::ModulesContainer>()) {
         qWarning() << "Could not read Student::modules through reflection.";
-        return;
+        return false;
     }
 
     const Student::ModulesContainer modules = modulesVariant.value<Student::ModulesContainer>();
@@ -295,4 +297,6 @@ void StudentListXmlSerializer::appendStudentElement(QDomDocument &document,
         markElement.appendChild(document.createTextNode(QString::number(it.value())));
         moduleElement.appendChild(markElement);
     }
+
+    return true;
 }

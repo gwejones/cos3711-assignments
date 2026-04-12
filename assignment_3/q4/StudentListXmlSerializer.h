@@ -27,7 +27,7 @@ private:
     void deleteStudents(QList<Student *> &students) const;
     bool parseModuleElement(const QDomElement &moduleElement, QString &moduleCode, int &mark) const;
     bool parseStudentElement(const QDomElement &studentElement, Student *&student) const;
-    void appendStudentElement(QDomDocument &document,
+    bool appendStudentElement(QDomDocument &document,
                               QDomElement &rootElement,
                               const Student &student) const;
 };
