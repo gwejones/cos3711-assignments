@@ -168,6 +168,28 @@ QString RainXml::writeToXml(/*passing rain data*/)
 
 ## 3.1
 
+```cpp
+class StationThread : public QObject
+{
+    Q_OBJECT
+
+public:
+    StationThread(const QList<RainRecord*>& allData,
+                           QString stn);
+
+public slots:
+    void doSearch();
+
+signals:
+    void foundStation(QString date, QString mm);
+    void finished();
+
+private:
+    QList<RainRecord*> record;
+    QString station;
+};
+```
+
 ## 3.2
 
 ## 3.3
