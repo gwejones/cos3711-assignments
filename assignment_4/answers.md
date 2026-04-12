@@ -219,6 +219,16 @@ Its not the best approach.
 
 ## 3.4.1
 
+The classic Memento pattern has three components:
+- **Originator**: the object whose state is saved/restored.
+- **Memento**: the snapshot object that stores the originator state.
+- **Caretaker**: the object that keeps mementos and decides when to save/restore.
+
+In this scenario:
+- `MyTableWidget` is the **Originator**.
+- `MyTableWidgetMemento` is the **Memento**.
+- `Client` is the **Caretaker**.
+
 ## 3.4.2
 
 ## 3.5
