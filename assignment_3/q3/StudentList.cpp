@@ -2,6 +2,8 @@
 
 #include "Student.h"
 
+#include <QMetaType>
+
 StudentList &StudentList::instance()
 {
     static StudentList listInstance;
@@ -9,18 +11,24 @@ StudentList &StudentList::instance()
 }
 
 StudentList::StudentList()
-    : m_students(new QList<Student *>())
+    : QObject(nullptr)
 {
+    registerMetaTypes();
 }
 
 StudentList::~StudentList()
 {
-    for (QList<Student *>::const_iterator it = m_students->cbegin();
-         it != m_students->cend();
+    for (StudentsContainer::const_iterator it = m_students.cbegin();
+         it != m_students.cend();
          ++it) {
         delete *it;
     }
-    delete m_students;
+}
+
+void StudentList::registerMetaTypes()
+{
+    Student::registerMetaTypes();
+    qRegisterMetaType<StudentsContainer>("StudentList::StudentsContainer");
 }
 
 void StudentList::addStudent(Student *student)
@@ -29,18 +37,28 @@ void StudentList::addStudent(Student *student)
         return;
     }
 
-    m_students->append(student);
+    m_students.append(student);
 }
 
-const QList<Student *> &StudentList::getStudents() const
+StudentList::StudentsContainer &StudentList::getStudents()
 {
-    return *m_students;
+    return m_students;
+}
+
+const StudentList::StudentsContainer &StudentList::getStudents() const
+{
+    return m_students;
+}
+
+StudentList::StudentsContainer StudentList::students() const
+{
+    return m_students;
 }
 
 int StudentList::indexOfStudentNumber(const QString &studentNumber) const
 {
-    for (int index = 0; index < m_students->size(); ++index) {
-        const Student *student = m_students->at(index);
+    for (int index = 0; index < m_students.size(); ++index) {
+        const Student *student = m_students.at(index);
         if (student != nullptr && student->getNumber() == studentNumber) {
             return index;
         }
@@ -51,14 +69,14 @@ int StudentList::indexOfStudentNumber(const QString &studentNumber) const
 
 Student *StudentList::getStudent(int index) const
 {
-    if (index < 0 || index >= m_students->size()) {
+    if (index < 0 || index >= m_students.size()) {
         return nullptr;
     }
 
-    return m_students->at(index);
+    return m_students.at(index);
 }
 
 int StudentList::size() const
 {
-    return m_students->size();
+    return m_students.size();
 }
