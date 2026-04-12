@@ -104,6 +104,14 @@ If station codes are not validated at input time, invalid values enter the workf
 
 ## 2.3.3
 
+```cpp
+bool RainXml::checkStationCode(QString stn) const
+{
+    QRegularExpressionMatch match = re.match(stn);
+    return match.hasMatch();
+}
+```
+
 ## 2.4
 
 # Question 3
