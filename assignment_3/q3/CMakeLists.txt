@@ -14,6 +14,8 @@ qt_standard_project_setup()
 qt_add_executable(q3
     Student.cpp
     Student.h
+    StudentList.cpp
+    StudentList.h
     StudentRecordsWindow.cpp
     StudentRecordsWindow.h
     main.cpp
