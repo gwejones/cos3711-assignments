@@ -12,6 +12,8 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 qt_standard_project_setup()
 
 qt_add_executable(q3
+    Student.cpp
+    Student.h
     StudentRecordsWindow.cpp
     StudentRecordsWindow.h
     main.cpp

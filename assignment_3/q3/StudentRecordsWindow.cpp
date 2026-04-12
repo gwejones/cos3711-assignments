@@ -20,7 +20,7 @@ static constexpr const char *kGetStudentExecutableName = "q1";
 StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
     : QWidget(parent)
 {
-    setWindowTitle("Question 2");
+    setWindowTitle("Question 3");
 
     m_launchGetStudentButton = new QPushButton("Launch GetStudent");
     m_studentNumberLineEdit = new QLineEdit();
