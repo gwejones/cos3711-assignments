@@ -238,3 +238,15 @@ It is not correct. The problematic areas are:
 - The constructor of the Originator is private, which makes normal widget creation impossible. It should be the constructor of the Momento (`MyTableWidgetMemento`) that is private so that the Caretaker cannot access the state of the Originator.
 
 ## 3.5
+
+Cloud computing is a good choice for this rainfall system in terms of **cost** and **scale**.
+
+For cost, cloud services are usually billed on a pay-as-you-go basis, so the organization pays for what it uses rather than buying and maintaining full infrastructure capacity upfront. This helps reduce initial expenditure and ensures operating costs reflect actual usage. [[2]](#references) [[3]](#references)
+
+For scale, cloud platforms are designed for elastic resource allocation. So they can scale up during heavy demand and scale down during low demand, which is useful for our workload since rainfall varies by season and region, and reporting load may vary too. [[1]](#references) [[3]](#references)
+
+# References
+
+1. [1] https://en.wikipedia.org/wiki/Cloud_computing
+2. [2] https://azure.microsoft.com/en-us/overview/what-is-cloud-computing/
+3. [3] https://www.ibm.com/cloud/learn/cloud-computing
