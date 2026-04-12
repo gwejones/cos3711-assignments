@@ -192,6 +192,25 @@ private:
 
 ## 3.2
 
+```cpp
+st->moveToThread(t);
+
+connect(t, &QThread::started,
+        st, &StationThread::doSearch);
+
+connect(st, &StationThread::foundStation,
+        this, &Client::handleFound);
+
+connect(st, &StationThread::finished,
+        t, &QThread::quit);
+connect(st, &StationThread::finished,
+        st, &QObject::deleteLater);
+connect(t, &QThread::finished,
+        t, &QObject::deleteLater);
+
+t->start();
+```
+
 ## 3.3
 
 ## 3.4.1
