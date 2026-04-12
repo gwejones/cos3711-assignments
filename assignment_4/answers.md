@@ -114,6 +114,56 @@ bool RainXml::checkStationCode(QString stn) const
 
 ## 2.4
 
+```cpp
+QString RainXml::writeToXml(/*passing rain data*/)
+{
+    QString xmlOutput;
+    QXmlStreamWriter writer(&xmlOutput);
+
+    writer.setAutoFormatting(true);
+    writer.writeStartDocument();
+    writer.writeStartElement("rainRecord");
+
+    // loop through each rain pointer named r (do not code this)
+    for (/* each rain record pointer r */) {
+        // use the meta-object to get the required data
+        const QMetaObject* mo = r->metaObject();
+        int dataPropIndex = mo->indexOfProperty("data");
+        QString rawData = mo->property(dataPropIndex).read(r).toString();
+
+        QStringList parts = rawData.split(':');
+        if (parts.size() != 3) {
+            continue;
+        }
+
+        QString station = parts.at(0).trimmed();
+        QString dateRaw = parts.at(1).trimmed();
+        QString mm = parts.at(2).trimmed();
+
+        // if the station code passes the test
+        if (checkStationCode(station)) {
+            QDate d = QDate::fromString(dateRaw, "yyyy/MM/dd");
+            if (!d.isValid()) {
+                continue;
+            }
+
+            // set up the <rain> tag and its sub-tags as required
+            writer.writeStartElement("rain");
+            writer.writeAttribute("date", d.toString("yyyy/MM/dd"));
+            writer.writeTextElement("station", station);
+            writer.writeTextElement("mm", mm);
+            writer.writeEndElement();
+        }
+    }
+
+    // end xml text
+    writer.writeEndElement();   // rainRecord
+    writer.writeEndDocument();
+
+    return xmlOutput;
+}
+```
+
 # Question 3
 
 ## 3.1
