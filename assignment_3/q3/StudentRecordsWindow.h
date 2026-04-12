@@ -7,6 +7,8 @@ class Student;
 class QLineEdit;
 class QPushButton;
 class QString;
+class QStandardItemModel;
+class QTableView;
 
 class StudentRecordsWindow : public QWidget
 {
@@ -38,12 +40,13 @@ private:
     QLineEdit *m_moduleCodeLineEdit = nullptr;
     QLineEdit *m_markLineEdit = nullptr;
     QLineEdit *m_lookupStudentNumberLineEdit = nullptr;
-    QLineEdit *m_studentRecordLineEdit = nullptr;
+    QTableView *m_studentRecordTableView = nullptr;
     QLineEdit *m_averageLineEdit = nullptr;
     QLineEdit *m_graduationStatusLineEdit = nullptr;
     QPushButton *m_displayStudentRecordButton = nullptr;
     QPushButton *m_showAverageButton = nullptr;
     QPushButton *m_checkGraduationButton = nullptr;
+    QStandardItemModel *m_studentRecordTableModel = nullptr;
     QProcess *m_getStudentProcess = nullptr;
     QString m_standardOutputBuffer;
 };

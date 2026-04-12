@@ -3,22 +3,27 @@
 #include "Student.h"
 #include "StudentList.h"
 
+#include <QAbstractItemView>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
 #include <QFormLayout>
+#include <QHeaderView>
 #include <QHBoxLayout>
 #include <QLoggingCategory>
 #include <QByteArray>
 #include <QLineEdit>
 #include <QProcess>
 #include <QPushButton>
+#include <QStandardItem>
+#include <QStandardItemModel>
+#include <QTableView>
 #include <QString>
 #include <QStringList>
 #include <QVBoxLayout>
 
 static constexpr int kWindowWidth = 420;
-static constexpr int kWindowHeight = 340;
+static constexpr int kWindowHeight = 420;
 static constexpr const char *kGetStudentExecutableName = "q1";
 
 StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
@@ -34,15 +39,15 @@ StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
     m_moduleCodeLineEdit = new QLineEdit();
     m_markLineEdit = new QLineEdit();
     m_lookupStudentNumberLineEdit = new QLineEdit();
-    m_studentRecordLineEdit = new QLineEdit();
+    m_studentRecordTableView = new QTableView();
     m_averageLineEdit = new QLineEdit();
     m_graduationStatusLineEdit = new QLineEdit();
     m_getStudentProcess = new QProcess(this);
+    m_studentRecordTableModel = new QStandardItemModel(this);
 
     m_studentNumberLineEdit->setReadOnly(true);
     m_moduleCodeLineEdit->setReadOnly(true);
     m_markLineEdit->setReadOnly(true);
-    m_studentRecordLineEdit->setReadOnly(true);
     m_averageLineEdit->setReadOnly(true);
     m_graduationStatusLineEdit->setReadOnly(true);
 
@@ -50,9 +55,17 @@ StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
     m_moduleCodeLineEdit->setPlaceholderText("Latest module code");
     m_markLineEdit->setPlaceholderText("Latest mark");
     m_lookupStudentNumberLineEdit->setPlaceholderText("Enter student number");
-    m_studentRecordLineEdit->setPlaceholderText("Student modules and marks");
     m_averageLineEdit->setPlaceholderText("Average mark");
     m_graduationStatusLineEdit->setPlaceholderText("Graduation status");
+
+    m_studentRecordTableView->setModel(m_studentRecordTableModel);
+    m_studentRecordTableModel->setColumnCount(2);
+    m_studentRecordTableModel->setHorizontalHeaderLabels(QStringList() << "Module Code" << "Mark");
+    m_studentRecordTableView->setSelectionMode(QAbstractItemView::NoSelection);
+    m_studentRecordTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    m_studentRecordTableView->horizontalHeader()->setStretchLastSection(true);
+    m_studentRecordTableView->verticalHeader()->setVisible(false);
+    m_studentRecordTableView->setMinimumHeight(120);
 
     QFormLayout *latestRecordLayout = new QFormLayout();
     latestRecordLayout->addRow("Latest Student Number", m_studentNumberLineEdit);
@@ -67,7 +80,7 @@ StudentRecordsWindow::StudentRecordsWindow(QWidget *parent)
     QFormLayout *queryResultsLayout = new QFormLayout();
     queryResultsLayout->addRow("Lookup Student Number", m_lookupStudentNumberLineEdit);
     queryResultsLayout->addRow(queryActionsLayout);
-    queryResultsLayout->addRow("Student Record", m_studentRecordLineEdit);
+    queryResultsLayout->addRow("Student Record", m_studentRecordTableView);
     queryResultsLayout->addRow("Average", m_averageLineEdit);
     queryResultsLayout->addRow("Graduation", m_graduationStatusLineEdit);
 
@@ -200,27 +213,27 @@ Student *StudentRecordsWindow::findStudentFromLookupInput(QString &lookupNumber)
 
 void StudentRecordsWindow::onDisplayStudentRecordClicked()
 {
+    m_studentRecordTableModel->removeRows(0, m_studentRecordTableModel->rowCount());
+
     QString lookupNumber;
     Student *student = findStudentFromLookupInput(lookupNumber);
     if (student == nullptr) {
-        m_studentRecordLineEdit->clear();
         return;
     }
 
     const Student::ModulesContainer &modules = student->getModules();
-    if (modules.isEmpty()) {
-        m_studentRecordLineEdit->setText("No modules.");
-        return;
-    }
-
-    QStringList recordParts;
+    int row = 0;
     for (Student::ModulesContainer::const_iterator it = modules.cbegin();
          it != modules.cend();
          ++it) {
-        recordParts.append(it.key() + ":" + QString::number(it.value()));
+        QStandardItem *moduleCodeItem = new QStandardItem(it.key());
+        QStandardItem *markItem = new QStandardItem(QString::number(it.value()));
+        moduleCodeItem->setEditable(false);
+        markItem->setEditable(false);
+        m_studentRecordTableModel->setItem(row, 0, moduleCodeItem);
+        m_studentRecordTableModel->setItem(row, 1, markItem);
+        ++row;
     }
-
-    m_studentRecordLineEdit->setText(recordParts.join(", "));
 }
 
 void StudentRecordsWindow::onShowAverageClicked()
