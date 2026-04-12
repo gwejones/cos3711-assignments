@@ -14,6 +14,10 @@ The partial UML class diagram is shown below.
 
 ## 1.2
 
+Yes. The pattern used is the **Strategy** pattern, which is a **behavioural** pattern.
+
+It is behavioural because the key variation is in behaviour (how the graph is drawn), not in object structure or object creation.
+
 ## 1.3
 
 # Question 2
