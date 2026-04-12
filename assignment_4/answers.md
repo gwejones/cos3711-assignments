@@ -8,6 +8,10 @@ date: "2026-04-12"
 
 ## 1.1
 
+The partial UML class diagram is shown below.
+
+![1.1 UML Class Diagram](uml/q1_1_rainfall_class_diagram.png)
+
 ## 1.2
 
 ## 1.3

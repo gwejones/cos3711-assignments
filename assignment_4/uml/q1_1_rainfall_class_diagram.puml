@@ -1,0 +1,47 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class ClientGUI {
+  - recordList : QList<RainRecord*>
+  - serializer : RainXmlSerializer
+  - graph : AbstractGraph*
+  + addRainData(station : QString, date : QDate, mm : int) : void
+  + getAllRainData() : QList<RainRecord*>
+  + setGraph(graph : AbstractGraph*) : void
+  + getXmlRepresentation() : QString
+  + drawSelectedGraph() : void
+}
+
+class RainRecord {
+  - stationCode : QString
+  - date : QDate
+  - rainfallMm : int
+  + getStationCode() : QString
+  + getDate() : QDate
+  + getRainfallMm() : int
+}
+
+class RainXmlSerializer {
+  + toXml(records : QList<RainRecord*>) : QString
+}
+
+abstract class AbstractGraph {
+  + {abstract} drawGraph(xmlData : QString) : void
+}
+
+class BarGraph {
+  + drawGraph(xmlData : QString) : void
+}
+
+class ColumnGraph {
+  + drawGraph(xmlData : QString) : void
+}
+
+ClientGUI *-- "0..*" RainRecord : contains
+ClientGUI --> RainXmlSerializer : requests XML
+ClientGUI --> AbstractGraph : delegates drawing
+AbstractGraph <|-- BarGraph
+AbstractGraph <|-- ColumnGraph
+
+@enduml
