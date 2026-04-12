@@ -20,6 +20,23 @@ It is behavioural because the key variation is in behaviour (how the graph is dr
 
 ## 1.3
 
+The class definition is shown below.
+
+```cpp
+class RainRecord : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString data READ getData)
+
+private:
+    QString stationCode;
+    QDate date;
+    int rainfallMm;
+
+    QString getData() const;
+};
+```
+
 # Question 2
 
 ## 2.1
