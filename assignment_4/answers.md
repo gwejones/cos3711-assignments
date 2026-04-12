@@ -213,6 +213,10 @@ t->start();
 
 ## 3.3
 
+Its not the best approach.
+
+`QTableWidget` is acceptable for a small, simple table because it convenient, but it is item-based and tightly couples domain data storage to the UI widget. For this scenario, a model/view approach with `QTableView` and seperate domain model class is better because it scales more cleanly, separates data from presentation, and is easier to update/refresh when thread results arrive. With `QTableView` and a model, thread results can be appended to model data, and the view refresh is handled through model notifications. That gives cleaner, safer update flow.
+
 ## 3.4.1
 
 ## 3.4.2
