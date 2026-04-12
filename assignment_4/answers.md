@@ -41,6 +41,10 @@ private:
 
 ## 2.1
 
+```cpp
+QString dateStr = date.toString("yyyy/MM/dd");
+```
+
 ## 2.2.1
 
 ## 2.2.2
