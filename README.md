@@ -7,3 +7,4 @@ To increase the depth of student's insight into advanced programming principles 
 - [Assignment 1](./assignment_1/)
 - [Assignment 2](./assignment_2/)
 - [Assignment 3](./assignment_3/)
+- [Assignment 4](./assignment_4/)
