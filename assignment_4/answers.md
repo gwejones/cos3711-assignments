@@ -231,4 +231,10 @@ In this scenario:
 
 ## 3.4.2
 
+It is not correct. The problematic areas are:
+
+- `friend class MyTableWidgetMemento` is the wrong direction for classic Memento encapsulation. We need the Originator (`MyTableWidget`) to access private state inside the Memento, not for the Memento class to access the Originator’s private members.
+- `createMemento()` and `setMemento(...)` are private, so the Caretaker (`Client`) cannot call them to save/restore. It should be the `getState()` and `setState()` methods of the Momento that are private.
+- The constructor of the Originator is private, which makes normal widget creation impossible. It should be the constructor of the Momento (`MyTableWidgetMemento`) that is private so that the Caretaker cannot access the state of the Originator.
+
 ## 3.5
