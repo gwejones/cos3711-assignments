@@ -35,6 +35,8 @@ private:
      */
     QString resolveGetStudentPath() const;
 
+    QString resolveStudentListXmlPath() const;
+
     QPushButton *m_launchGetStudentButton = nullptr;
     QLineEdit *m_studentNumberLineEdit = nullptr;
     QLineEdit *m_moduleCodeLineEdit = nullptr;

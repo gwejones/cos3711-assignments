@@ -16,6 +16,7 @@ qt_add_executable(q4
     Student.h
     StudentList.cpp
     StudentList.h
+    StudentListXmlSchema.h
     StudentRecordsWindow.cpp
     StudentRecordsWindow.h
     main.cpp

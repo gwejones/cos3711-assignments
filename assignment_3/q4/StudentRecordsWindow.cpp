@@ -2,6 +2,7 @@
 
 #include "Student.h"
 #include "StudentList.h"
+#include "StudentListXmlSchema.h"
 
 #include <QAbstractItemView>
 #include <QCoreApplication>
@@ -346,4 +347,11 @@ QString StudentRecordsWindow::resolveGetStudentPath() const
     const QString candidateInParentDirectory =
         QDir(applicationDirectory).filePath("../" + executableName);
     return QDir::cleanPath(candidateInParentDirectory);
+}
+
+QString StudentRecordsWindow::resolveStudentListXmlPath() const
+{
+    const QString applicationDirectory = QCoreApplication::applicationDirPath();
+    const QString xmlFileName = QString(StudentListXmlSchema::kFileName);
+    return QDir(applicationDirectory).filePath(xmlFileName);
 }
