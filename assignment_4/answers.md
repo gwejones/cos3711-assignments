@@ -83,6 +83,19 @@ None of these requirements apply to `RainXml`, since it is just a simple seriali
 
 ## 2.3.1
 
+```cpp
+QRegularExpression re("^([A-Z])[a-z][a-z]\\1[1-9]\\d{2}$");
+```
+
+Explanation:
+- `^` anchors the match to the start of the string, so no characters before the code.
+- `([A-Z])` captures the first uppercase letter.
+- `[a-z][a-z]` matches the next two lowercase letters.
+- `\1` requires the same uppercase letter captured at the start.
+- `[1-9]` ensures the first digit of the numeric part is not zero.
+- `\d{2}` matches the remaining two digits.
+- `$` anchors the match to the end of the string, so no characters after the code.
+
 ## 2.3.2
 
 ## 2.3.3
