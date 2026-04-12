@@ -211,6 +211,8 @@ connect(t, &QThread::finished,
 t->start();
 ```
 
+This assumes that `StationThread::doSearch()` emits `finished()` when processing completes, so the `finished` connections can quit and clean up the thread/worker.
+
 ## 3.3
 
 Its not the best approach.
