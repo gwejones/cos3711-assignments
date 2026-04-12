@@ -55,6 +55,23 @@ StudentList::StudentsContainer StudentList::students() const
     return m_students;
 }
 
+void StudentList::setStudents(const StudentsContainer &students)
+{
+    for (StudentsContainer::const_iterator it = m_students.cbegin();
+         it != m_students.cend();
+         ++it) {
+        delete *it;
+    }
+
+    m_students.clear();
+
+    for (StudentsContainer::const_iterator it = students.cbegin();
+         it != students.cend();
+         ++it) {
+        m_students.append(*it);
+    }
+}
+
 int StudentList::indexOfStudentNumber(const QString &studentNumber) const
 {
     for (int index = 0; index < m_students.size(); ++index) {

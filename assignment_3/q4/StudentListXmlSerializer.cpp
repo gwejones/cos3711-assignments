@@ -194,12 +194,13 @@ bool StudentListXmlSerializer::loadFromFile(const QString &filePath, StudentList
         childNode = childNode.nextSibling();
     }
 
-    StudentList::StudentsContainer &existingStudents = studentList.getStudents();
-    deleteStudents(existingStudents);
-    for (StudentList::StudentsContainer::const_iterator it = parsedStudents.cbegin();
-         it != parsedStudents.cend();
-         ++it) {
-        existingStudents.append(*it);
+    const QVariant studentsVariant = QVariant::fromValue(parsedStudents);
+    const bool isStudentsAssigned = studentList.setProperty(kStudentListStudentsPropertyName,
+                                                            studentsVariant);
+    if (!isStudentsAssigned) {
+        qWarning() << "Could not assign StudentList::students through reflection.";
+        deleteStudents(parsedStudents);
+        return false;
     }
 
     return true;

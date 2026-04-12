@@ -14,7 +14,7 @@ public:
 
 private:
     Q_OBJECT
-    Q_PROPERTY(StudentsContainer students READ students)
+    Q_PROPERTY(StudentsContainer students READ students WRITE setStudents)
 
 public:
     static StudentList &instance();
@@ -44,6 +44,11 @@ public:
      * Property-compatible snapshot of the student container.
      */
     StudentsContainer students() const;
+
+    /**
+     * Replace the full student container.
+     */
+    void setStudents(const StudentsContainer &students);
 
     /**
      * Return the index for a student number, or -1 if not found.
